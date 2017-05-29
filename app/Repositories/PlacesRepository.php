@@ -49,8 +49,8 @@ class PlacesRepository
             'latitude' => $data->latitude,
             'longitude' => $data->longitude,
             'deleted' => $data->deleted,
-            'avatarUrl' => $data->avatar_url,
-            'userId' => $data->user_id,
+            'avatar_url' => $data->avatar_url,
+            'user_id' => $data->user_id,
             'visible' => $data->visible,
             'address' => $data->address
         ]);
@@ -71,8 +71,8 @@ class PlacesRepository
                 'latitude' => $data->latitude,
                 'longitude' => $data->longitude,
                 'deleted' => $data->deleted,
-                'avatarUrl' => $data->avatar_url,
-                'userId' => $data->user_id,
+                'avatar_url' => $data->avatar_url,
+                'user_id' => $data->user_id,
                 'visible' => $data->visible,
                 'address' => $data->address
             ]);
