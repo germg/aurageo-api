@@ -9,8 +9,18 @@ class PlacesRepository
     const MODEL = 'App\Models\Places';
 
     // TODO: Solo para test
-    public function get_all(){
-        return Places::get();
+    public function get_all()
+    {
+        return Places::get(['id',
+            'name',
+            'description',
+            'latitude',
+            'longitude',
+            'deleted',
+            'avatar_url as avatarUrl',
+            'user_id as userId',
+            'visible',
+            'address']);
     }
 
     /**
@@ -21,7 +31,16 @@ class PlacesRepository
      */
     public function get($id)
     {
-        return Places::find($id);
+        return Places::find(['id',
+            'name',
+            'description',
+            'latitude',
+            'longitude',
+            'deleted',
+            'avatar_url as avatarUrl',
+            'user_id as userId',
+            'visible',
+            'address']);
     }
 
     /**
@@ -32,7 +51,16 @@ class PlacesRepository
      */
     public function getById($id)
     {
-        return Places::find($id);
+        return Places::where('id', '=', $id)->get(['id',
+            'name',
+            'description',
+            'latitude',
+            'longitude',
+            'deleted',
+            'avatar_url as avatarUrl',
+            'user_id as userId',
+            'visible',
+            'address']);
     }
 
     /**
@@ -49,8 +77,8 @@ class PlacesRepository
             'latitude' => $data->latitude,
             'longitude' => $data->longitude,
             'deleted' => $data->deleted,
-            'avatar_url' => $data->avatar_url,
-            'user_id' => $data->user_id,
+            'avatar_url' => $data->avatarUrl,
+            'user_id' => $data->userId,
             'visible' => $data->visible,
             'address' => $data->address
         ]);
@@ -71,8 +99,8 @@ class PlacesRepository
                 'latitude' => $data->latitude,
                 'longitude' => $data->longitude,
                 'deleted' => $data->deleted,
-                'avatar_url' => $data->avatar_url,
-                'user_id' => $data->user_id,
+                'avatar_url' => $data->avatarUrl,
+                'user_id' => $data->userId,
                 'visible' => $data->visible,
                 'address' => $data->address
             ]);
@@ -86,7 +114,7 @@ class PlacesRepository
      */
     public function delete($id)
     {
-       return  Places::where('id', '=', $id)
+        return Places::where('id', '=', $id)
             ->update([
                 'deleted' => 1
             ]);
