@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Business;
 
 use App\Http\Controllers\Controller;
+use App\Services\PhpGeoService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -44,7 +45,15 @@ class PlacesController extends Controller
         ]);
     }
 
-    public function get_all(){
+    //FIXME: Solo para test
+    public function testPhpGeo()
+    {
+        $phpGeoService = new PhpGeoService();
+        return response($phpGeoService->getDistance(), Response::HTTP_OK);
+    }
+
+    public function get_all()
+    {
         return response($this->placesRepository->get_all(), Response::HTTP_OK);
     }
 

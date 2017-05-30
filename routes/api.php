@@ -32,9 +32,10 @@ Route::group(['prefix' => 'cards'], function () {
     Route::put('/create', 'Business\CardsController@create');
     Route::post('/edit', 'Business\CardsController@edit');
     Route::delete('/delete', 'Business\CardsController@delete');
-});
+}); 
 
 Route::group(['prefix' => 'places'], function () {
+    Route::get('/testphpgeo', 'Business\PlacesController@testPhpGeo');
     Route::get('/{id}', 'Business\PlacesController@getById');
     Route::get('/', 'Business\PlacesController@get_all');
     Route::put('/create', 'Business\PlacesController@create');
