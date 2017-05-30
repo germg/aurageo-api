@@ -52,9 +52,25 @@ class PlacesController extends Controller
         return response($phpGeoService->getDistance(), Response::HTTP_OK);
     }
 
-    public function get_all()
+    /**
+     * Obtiene una lista de lugares marcado como favorito por user_id
+     *
+     * @param $user_id
+     * @return Response
+     */
+    public function getBookmarkedByUserId($user_id)
     {
-        return response($this->placesRepository->get_all(), Response::HTTP_OK);
+        return response($this->placesRepository->getBookmarkedByUserId($user_id), Response::HTTP_OK);
+    }
+
+    /**
+     * Obtiene una lista de lugares por su user_id
+     * @param $user_id
+     * @return Response
+     */
+    public function getByUserId($user_id)
+    {
+        return response($this->placesRepository->getByUserId($user_id), Response::HTTP_OK);
     }
 
     /**

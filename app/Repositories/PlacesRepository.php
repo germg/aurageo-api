@@ -24,6 +24,48 @@ class PlacesRepository
     }
 
     /**
+     *  Obtiene una lista de lugares marcado como favorito por user_id
+     *
+     * @param $user_id
+     * @return mixed
+     */
+    public function getBookmarkedByUserId($user_id)
+    {
+        return Places::join('bookmarks', 'bookmarks.place_id', 'id')
+            ->where('bookmarks.user_id', '=', $user_id)
+            ->get(['id',
+                'name',
+                'description',
+                'latitude',
+                'longitude',
+                'deleted',
+                'avatar_url as avatarUrl',
+                'places.user_id as userId',
+                'visible',
+                'address']);
+    }
+
+    /**
+     * Obtiene una lista de lugares por su user_id
+     * @param $user_id
+     * @return mixed
+     */
+    public function getByUserId($user_id)
+    {
+        return Places::where('user_id', '=', $user_id)
+            ->get(['id',
+                'name',
+                'description',
+                'latitude',
+                'longitude',
+                'deleted',
+                'avatar_url as avatarUrl',
+                'places.user_id as userId',
+                'visible',
+                'address']);
+    }
+
+    /**
      * Obtiene una lista de lugares
      *
      * @param $id

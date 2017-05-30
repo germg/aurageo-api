@@ -32,12 +32,14 @@ Route::group(['prefix' => 'cards'], function () {
     Route::put('/create', 'Business\CardsController@create');
     Route::post('/edit', 'Business\CardsController@edit');
     Route::delete('/delete', 'Business\CardsController@delete');
-}); 
+});
 
 Route::group(['prefix' => 'places'], function () {
     Route::get('/testphpgeo', 'Business\PlacesController@testPhpGeo');
     Route::get('/{id}', 'Business\PlacesController@getById');
     Route::get('/', 'Business\PlacesController@get_all');
+    Route::get('/user/{user_id}', 'Business\PlacesController@getByUserId');
+    Route::get('/bookmarked/user/{user_id}', 'Business\PlacesController@getBookmarkedByUserId');
     Route::put('/create', 'Business\PlacesController@create');
     Route::post('/edit', 'Business\PlacesController@edit');
     Route::delete('/delete', 'Business\PlacesController@delete');
