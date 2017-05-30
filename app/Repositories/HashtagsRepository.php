@@ -15,7 +15,12 @@ class HashtagsRepository
      */
     public function get()
     {
-        return Hashtags::get();
+        return Hashtags::get([
+            'id',
+            'place_id as placeId',
+            'description',
+            'deleted'
+        ]);
     }
 
     /**
@@ -26,7 +31,13 @@ class HashtagsRepository
      */
     public function getById($id)
     {
-        return Hashtags::find($id);
+        return Hashtags::where('id', '=', $id)
+            ->get([
+                'id',
+                'place_id as placeId',
+                'description',
+                'deleted'
+            ])->first();
     }
 
     /**
@@ -38,7 +49,12 @@ class HashtagsRepository
     public function getByPlaceId($place_id)
     {
         return Hashtags::where('place_id', '=', $place_id)
-            ->get();
+            ->get([
+                'id',
+                'place_id as placeId',
+                'description',
+                'deleted'
+            ]);
     }
 
     /**
@@ -50,7 +66,7 @@ class HashtagsRepository
     public function create($data)
     {
         return Hashtags::create([
-            'place_id' => $data->place_id,
+            'place_id' => $data->placeId,
             'description' => $data->description
         ]);
     }
@@ -65,7 +81,7 @@ class HashtagsRepository
     {
         return Hashtags::where('id', '=', $data->id)
             ->update([
-                'place_id' => $data->place_id,
+                'place_id' => $data->placeId,
                 'description' => $data->description
             ]);
     }

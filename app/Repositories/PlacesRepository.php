@@ -60,7 +60,8 @@ class PlacesRepository
             'avatar_url as avatarUrl',
             'user_id as userId',
             'visible',
-            'address']);
+            'address'])
+        ->first();
     }
 
     /**

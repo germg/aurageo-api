@@ -15,7 +15,7 @@ class BookmarksRepository
      */
     public function get()
     {
-        return Hashtags::get();
+        return Bookmarks::get();
     }
 
     /**
@@ -27,7 +27,10 @@ class BookmarksRepository
     public function getByUserId($user_id)
     {
         return Bookmarks::where('user_id', '=', $user_id)
-            ->get();
+            ->get([
+                'user_id as userId',
+                'place_id as placeId'
+            ]);
     }
 
     /**
@@ -39,7 +42,10 @@ class BookmarksRepository
     public function getByPlaceId($place_id)
     {
         return Bookmarks::where('place_id', '=', $place_id)
-            ->get();
+            ->get([
+                'user_id as userId',
+                'place_id as placeId'
+            ]);
     }
 
     /**
@@ -51,8 +57,8 @@ class BookmarksRepository
     public function create($data)
     {
         return Bookmarks::create([
-            'user_id' => $data->user_id,
-            'place_id' => $data->place_id,
+            'user_id' => $data->userId,
+            'place_id' => $data->placeId,
         ]);
     }
 
