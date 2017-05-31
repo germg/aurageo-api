@@ -45,17 +45,6 @@ class PlacesController extends Controller
         ]);
     }
 
-    //FIXME: Solo para test
-    public function testPhpGeo()
-    {
-        $phpGeoService = new PhpGeoService();
-        return response($phpGeoService->getDistance(), Response::HTTP_OK);
-    }
-
-    public function get_all(){
-        return response($this->placesRepository->get_all(), Response::HTTP_OK);
-    }
-
     /**
      * Obtiene una lista de lugares marcado como favorito por user_id
      *
@@ -64,7 +53,26 @@ class PlacesController extends Controller
      */
     public function getBookmarkedByUserId($user_id)
     {
-        return response($this->placesRepository->getBookmarkedByUserId($user_id), Response::HTTP_OK);
+        try {
+            return response($this->placesRepository->getBookmarkedByUserId($user_id), Response::HTTP_OK);
+        } catch (Exception $e) {
+            return response("Ocurrió un error al intentar obtener lugares marcados como favorito por user_id.", Response::HTTP_FORBIDDEN);
+        }
+    }
+
+    /**
+     * Obtiene los lugares cercanos a las coordenadas pasadas
+     * @param $latitude
+     * @param $longitude
+     * @return Response
+     */
+    public function getPlacesNearToCoordinate($latitude, $longitude)
+    {
+        try {
+            return response($this->placesRepository->getPlacesNearToCoordinate($latitude, $longitude), Response::HTTP_OK);
+        } catch (Exception $e) {
+            return response("Ocurrió un error al intentar obtener lugares cercanos a una coordenada.", Response::HTTP_FORBIDDEN);
+        }
     }
 
     /**
@@ -74,7 +82,11 @@ class PlacesController extends Controller
      */
     public function getByUserId($user_id)
     {
-        return response($this->placesRepository->getByUserId($user_id), Response::HTTP_OK);
+        try {
+            return response($this->placesRepository->getByUserId($user_id), Response::HTTP_OK);
+        } catch (Exception $e) {
+            return response("Ocurrió un error al intentar obtener lugares por user_id.", Response::HTTP_FORBIDDEN);
+        }
     }
 
     /**

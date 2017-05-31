@@ -35,7 +35,7 @@ Route::group(['prefix' => 'cards'], function () {
 });
 
 Route::group(['prefix' => 'places'], function () {
-    Route::get('/testphpgeo', 'Business\PlacesController@testPhpGeo');
+    Route::get('/latitude/{latitude}/longitude/{longitude}', 'Business\PlacesController@getPlacesNearToCoordinate');
     Route::get('/{id}', 'Business\PlacesController@getById');
     Route::get('/', 'Business\PlacesController@get_all');
     Route::get('/user/{user_id}', 'Business\PlacesController@getByUserId');

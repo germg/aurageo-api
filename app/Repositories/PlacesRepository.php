@@ -3,25 +3,11 @@
 namespace App\Repositories;
 
 use App\Models\Places;
+use Illuminate\Support\Facades\DB;
 
 class PlacesRepository
 {
     const MODEL = 'App\Models\Places';
-
-    // TODO: Solo para test
-    public function get_all()
-    {
-        return Places::get(['id',
-            'name',
-            'description',
-            'latitude',
-            'longitude',
-            'deleted',
-            'avatar_url as avatarUrl',
-            'user_id as userId',
-            'visible',
-            'address']);
-    }
 
     /**
      *  Obtiene una lista de lugares marcado como favorito por user_id
@@ -93,17 +79,18 @@ class PlacesRepository
      */
     public function getById($id)
     {
-        return Places::where('id', '=', $id)->get(['id',
-            'name',
-            'description',
-            'latitude',
-            'longitude',
-            'deleted',
-            'avatar_url as avatarUrl',
-            'user_id as userId',
-            'visible',
-            'address'])
-        ->first();
+        return Places::where('id', '=', $id)
+            ->get(['id',
+                'name',
+                'description',
+                'latitude',
+                'longitude',
+                'deleted',
+                'avatar_url as avatarUrl',
+                'user_id as userId',
+                'visible',
+                'address'])
+            ->first();
     }
 
     /**
@@ -161,5 +148,31 @@ class PlacesRepository
             ->update([
                 'deleted' => 1
             ]);
+    }
+
+    /**
+     * Obtiene una lista de lugares cercanos al las coordenadas pasadas
+     *
+     * @param $latitude
+     * @param $langitude
+     * @return mixed
+     */
+    public function getPlacesNearToCoordinate($latitude, $langitude)
+    {
+        return Places::select(['id',
+            'name',
+            'description',
+            'latitude',
+            'longitude',
+            'deleted',
+            'avatar_url as avatarUrl',
+            'user_id as userId',
+            'visible',
+            'address',
+            DB::raw('(3959 * acos( cos( radians(37) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(-122) ) + sin( radians(37) ) * sin(radians(latitude)) ) ) AS distance')
+        ])
+            ->orderBy('distance')
+            ->havingRaw('distance < 500')
+            ->get()->take(20);
     }
 }
