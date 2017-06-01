@@ -38,8 +38,8 @@ class PlacesController extends Controller
             'latitude' => 'required|max:20',
             'longitude' => 'required|max:20',
             'deleted' => 'required|boolean',
-            'avatar_url' => 'required|max:256',
-            'user_id' => 'required|numeric',
+            'avatarUrl' => 'required|max:256',
+            'userId' => 'required|numeric',
             'visible' => 'required|boolean',
             'address' => 'required|max:100'
         ]);
