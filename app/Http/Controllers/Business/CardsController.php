@@ -33,7 +33,7 @@ class CardsController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'place_id' => 'required|numeric',
+            'placeId' => 'required|numeric',
             'deleted' => 'required|boolean'
         ]);
     }

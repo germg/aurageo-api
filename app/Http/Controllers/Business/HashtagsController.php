@@ -33,7 +33,7 @@ class HashtagsController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'place_id' => 'required|numeric',
+            'placeId' => 'required|numeric',
             'description' => 'required|max:45'
         ]);
     }
