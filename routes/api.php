@@ -24,6 +24,7 @@ Route::group(['prefix' => 'hashtags'], function () {
     Route::put('/create', 'Business\HashtagsController@create');
     Route::post('/edit', 'Business\HashtagsController@edit');
     Route::delete('/delete', 'Business\HashtagsController@delete');
+    Route::get('/', 'Business\HashtagsController@get_all');
 });
 
 Route::group(['prefix' => 'cards'], function () {

@@ -159,7 +159,9 @@ class PlacesRepository
      */
     public function getPlacesNearToCoordinate($latitude, $langitude)
     {
-        return Places::select(['id',
+
+        return Places::where("visible","=",1)
+        ->select(['id',
             'name',
             'description',
             'latitude',
