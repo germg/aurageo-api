@@ -27,6 +27,9 @@ class UsersRepository
         return Users::find($id);
     }
 
+    public function getByEmail($email){
+      return Users::where('email',$email)->first();
+    }
     /**
      * Crea un usuario
      *
@@ -47,7 +50,7 @@ class UsersRepository
      * @return mixed
      */
     public function edit($data)
-    {   
+    {
        return Users::where('id', '=', $data->id)
                 ->update(['email' => $data->email]);
     }

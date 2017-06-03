@@ -13,9 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['prefix' => 'users'], function () {
+Route::group(['prefix' => 'users', 'middleware' => ['web']], function () {
     Route::put('/create', 'Business\UsersController@create');
     Route::delete('/delete', 'Business\UsersController@delete');
+    Route::get('glogin',array('as'=>'glogin','uses'=>'Business\UsersController@googleLogin')) ;
+    Route::get('google-user',array('as'=>'user.glist','uses'=>'Business\UsersController@listGoogleUser')) ;
 });
 
 Route::group(['prefix' => 'hashtags'], function () {
