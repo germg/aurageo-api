@@ -45,5 +45,5 @@ Route::group(['prefix' => 'places'], function () {
     Route::get('/bookmarked/user/{user_id}', 'Business\PlacesController@getBookmarkedByUserId');
     Route::put('/create', 'Business\PlacesController@create');
     Route::post('/edit/{id}', 'Business\PlacesController@edit');
-    Route::delete('/delete/{id}', 'Business\PlacesController@delete');
+    Route::post('/delete/{id}', 'Business\PlacesController@delete');
 });
