@@ -31,10 +31,10 @@ Route::group(['prefix' => 'hashtags'], function () {
 
 Route::group(['prefix' => 'cards'], function () {
     Route::get('/{id}', 'Business\CardsController@getById');
-    Route::get('/place/{id}', 'Business\CardsController@getByPlaceId');
+    Route::get('/place', 'Business\CardsController@getByPlaceId');
     Route::put('/create', 'Business\CardsController@create');
     Route::post('/edit', 'Business\CardsController@edit');
-    Route::delete('/delete/{id}', 'Business\CardsController@delete');
+    Route::delete('/delete', 'Business\CardsController@delete');
 });
 
 Route::group(['prefix' => 'places'], function () {
@@ -44,6 +44,6 @@ Route::group(['prefix' => 'places'], function () {
     Route::get('/user/{user_id}', 'Business\PlacesController@getByUserId');
     Route::get('/bookmarked/user/{user_id}', 'Business\PlacesController@getBookmarkedByUserId');
     Route::put('/create', 'Business\PlacesController@create');
-    Route::post('/edit', 'Business\PlacesController@edit');
-    Route::delete('/delete', 'Business\PlacesController@delete');
+    Route::post('/edit/{id}', 'Business\PlacesController@edit');
+    Route::delete('/delete/{id}', 'Business\PlacesController@delete');
 });
