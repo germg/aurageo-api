@@ -142,9 +142,9 @@ class PlacesRepository
      * @param $id
      * @return mixed
      */
-    public function delete($id)
+    public function delete($data)
     {
-        return Places::where('id', '=', $id)
+        return Places::where('id', '=', $data->id)
             ->update([
                 'deleted' => 1
             ]);
