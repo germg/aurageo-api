@@ -34,7 +34,7 @@ Route::group(['prefix' => 'cards'], function () {
     Route::get('/place', 'Business\CardsController@getByPlaceId');
     Route::put('/create', 'Business\CardsController@create');
     Route::post('/edit', 'Business\CardsController@edit');
-    Route::delete('/delete', 'Business\CardsController@delete');
+    Route::delete('/delete/{id}', 'Business\CardsController@delete');
 });
 
 Route::group(['prefix' => 'places'], function () {
@@ -45,5 +45,5 @@ Route::group(['prefix' => 'places'], function () {
     Route::get('/bookmarked/user/{user_id}', 'Business\PlacesController@getBookmarkedByUserId');
     Route::put('/create', 'Business\PlacesController@create');
     Route::post('/edit', 'Business\PlacesController@edit');
-    Route::post('/delete', 'Business\PlacesController@delete');
+    Route::delete('/delete/{id}', 'Business\PlacesController@delete');
 });

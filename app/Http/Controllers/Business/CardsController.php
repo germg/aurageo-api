@@ -127,23 +127,14 @@ class CardsController extends Controller
     /**
      * Elimina un usuario
      *
-     * @param Request $request
+     * @param $id
      * @return Response
      */
-    public function delete(Request $request)
+    public function delete($id)
     {
-        // Obtiene todos los parametros que vienen
-        $data = (object)$request->all();
-
         try {
-            if (isset($data->id)) {
-                // Transformo el array de datos a objeto (para hacer flechita)
-                $data = (object)$data;
-                $res = $this->cardsRepository->delete($data->id);
-                return response(Response::HTTP_OK);
-            } else {
-                return response("Debe indicar un id para eliminar", Response::HTTP_FORBIDDEN);
-            }
+            $res = $this->cardsRepository->delete($id);
+            return response(Response::HTTP_OK);
         } catch (Exception $e) {
             return response("Ocurrió un error al eliminar la tarjeta.", Response::HTTP_FORBIDDEN);
         }

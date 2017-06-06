@@ -18,8 +18,10 @@ class PlacesRepository
     public function getBookmarkedByUserId($user_id)
     {
         return Places::join('bookmarks', 'bookmarks.place_id', 'id')
-            ->where('bookmarks.user_id', '=', $user_id)
-            ->get(['id',
+            ->where([
+                ['bookmarks.user_id', '=', $user_id],
+                ['deleted', '=', 0]
+            ])->get(['id',
                 'name',
                 'description',
                 'latitude',
