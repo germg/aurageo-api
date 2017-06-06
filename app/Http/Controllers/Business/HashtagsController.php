@@ -127,24 +127,14 @@ class HashtagsController extends Controller
     /**
      * Elimina un hashtag
      *
-     * @param Request $request
+     * @param $id
      * @return Response
      */
-    public function delete(Request $request)
+    public function delete($id)
     {
-        // Obtiene todos los parametros que vienen
-        $data = (object)$request->all();
-
         try {
-
-            if (isset($data->id)) {
-                // Transformo el array de datos a objeto (para hacer flechita)
-                $data = (object)$data;
-                $res = $this->hashtagsRepository->delete($data->id);
-                return response(Response::HTTP_OK);
-            } else {
-                return response("Debe indicar un id para eliminar", Response::HTTP_FORBIDDEN);
-            }
+            $res = $this->hashtagsRepository->delete($id);
+            return response(Response::HTTP_OK);
         } catch (Exception $e) {
             return response("Ocurrió un error al eliminar el hashtag.", Response::HTTP_FORBIDDEN);
         }

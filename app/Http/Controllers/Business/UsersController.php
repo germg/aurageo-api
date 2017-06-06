@@ -68,80 +68,68 @@ class UsersController extends Controller
     /**
      * Elimina un usuario
      *
-     * @param Request $request
+     * @param $id
      * @return Response
      */
-    public function delete(Request $request)
+    public function delete($id)
     {
-        // Obtiene todos los parametros que vienen
-        $data = (object)$request->all();
-
         try {
-            if (isset($data->id)) {
-                // Transformo el array de datos a objeto (para hacer flechita)
-                $data = (object)$data;
-                $res = $this->usersRepository->delete($data->id);
-                return response(Response::HTTP_OK);
-            } else {
-                return response("Debe indicar un id para eliminar", Response::HTTP_FORBIDDEN);
-            }
+            $res = $this->usersRepository->delete($id);
+            return response(Response::HTTP_OK);
         } catch (Exception $e) {
             return response("Ocurrió un error al eliminar el usuario.", Response::HTTP_FORBIDDEN);
         }
     }
 
 // Google Login
-    public function googleLogin(Request $request)  {
+    public function googleLogin(Request $request)
+    {
 
-            $google_redirect_url = route('glogin');
-            $gClient = new \Google_Client();
-            $gClient->setApplicationName(env('SERVICES_GOOGLE_APP_NAME'));
-            $gClient->setClientId(env('SERVICES_GOOGLE_CLIENT_ID'));
-            $gClient->setClientSecret(env('SERVICES_GOOGLE_CLIENT_SECRET'));
-            $gClient->setRedirectUri($google_redirect_url);
-            $gClient->setDeveloperKey(env('SERVICES_GOOGLE_API_KEY'));
-            $gClient->setScopes(array(
-                'https://www.googleapis.com/auth/plus.me',
-                'https://www.googleapis.com/auth/userinfo.email',
-                'https://www.googleapis.com/auth/userinfo.profile',
-            ));
-            $google_oauthV2 = new \Google_Service_Oauth2($gClient);
-            if ($request->get('code')){
-                $gClient->authenticate($request->get('code'));
-                $request->session()->put('token', $gClient->getAccessToken());
-            }
-            if ($request->session()->get('token'))
-            {
-                $gClient->setAccessToken($request->session()->get('token'));
-            }
-            if ($gClient->getAccessToken())
-            {
-                //For logged in user, get details from google using access token
-                $guser = $google_oauthV2->userinfo->get();
-
-                    $request->session()->put('name', $guser['name']);
-                    $e = $guser['email'];
-                    $user = $this->usersRepository->getByEmail($e);
-
-                    dd($guser);
-
-                    if ($user)
-                    {
-//logged your user via auth login
-                    }else{
-                        //register your user with response data
-                    }
-             return redirect()->route('user.glist');
-            } else
-            {
-                //For Guest user, get google login url
-                $authUrl = $gClient->createAuthUrl();
-                return redirect()->to($authUrl);
-            }
+        $google_redirect_url = route('glogin');
+        $gClient = new \Google_Client();
+        $gClient->setApplicationName(env('SERVICES_GOOGLE_APP_NAME'));
+        $gClient->setClientId(env('SERVICES_GOOGLE_CLIENT_ID'));
+        $gClient->setClientSecret(env('SERVICES_GOOGLE_CLIENT_SECRET'));
+        $gClient->setRedirectUri($google_redirect_url);
+        $gClient->setDeveloperKey(env('SERVICES_GOOGLE_API_KEY'));
+        $gClient->setScopes(array(
+            'https://www.googleapis.com/auth/plus.me',
+            'https://www.googleapis.com/auth/userinfo.email',
+            'https://www.googleapis.com/auth/userinfo.profile',
+        ));
+        $google_oauthV2 = new \Google_Service_Oauth2($gClient);
+        if ($request->get('code')) {
+            $gClient->authenticate($request->get('code'));
+            $request->session()->put('token', $gClient->getAccessToken());
         }
-        // public function listGoogleUser(Request $request){
-        //   $users = User::orderBy('id','DESC')->paginate(5);
-        //  return view('users.list',compact('users'))->with('i', ($request->input('page', 1) - 1) * 5);;
-        //  return "";
-        // }
+        if ($request->session()->get('token')) {
+            $gClient->setAccessToken($request->session()->get('token'));
+        }
+        if ($gClient->getAccessToken()) {
+            //For logged in user, get details from google using access token
+            $guser = $google_oauthV2->userinfo->get();
+
+            $request->session()->put('name', $guser['name']);
+            $e = $guser['email'];
+            $user = $this->usersRepository->getByEmail($e);
+
+            dd($guser);
+
+            if ($user) {
+//logged your user via auth login
+            } else {
+                //register your user with response data
+            }
+            return redirect()->route('user.glist');
+        } else {
+            //For Guest user, get google login url
+            $authUrl = $gClient->createAuthUrl();
+            return redirect()->to($authUrl);
+        }
+    }
+    // public function listGoogleUser(Request $request){
+    //   $users = User::orderBy('id','DESC')->paginate(5);
+    //  return view('users.list',compact('users'))->with('i', ($request->input('page', 1) - 1) * 5);;
+    //  return "";
+    // }
 }

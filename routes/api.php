@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 Route::group(['prefix' => 'users'], function () {
     Route::put('/create', 'Business\UsersController@create');
-    Route::delete('/delete', 'Business\UsersController@delete');
+    Route::delete('/delete/{id}', 'Business\UsersController@delete');
     Route::get('glogin',array('as'=>'glogin','uses'=>'UserController@googleLogin')) ;
     Route::get('google-user',array('as'=>'user.glist','uses'=>'UserController@listGoogleUser')) ;
 });
@@ -25,7 +25,7 @@ Route::group(['prefix' => 'hashtags'], function () {
     Route::get('/place/{id}', 'Business\HashtagsController@getByPlaceId');
     Route::put('/create', 'Business\HashtagsController@create');
     Route::post('/edit', 'Business\HashtagsController@edit');
-    Route::delete('/delete', 'Business\HashtagsController@delete');
+    Route::delete('/delete/{id}', 'Business\HashtagsController@delete');
     Route::get('/', 'Business\HashtagsController@get_all');
 });
 
