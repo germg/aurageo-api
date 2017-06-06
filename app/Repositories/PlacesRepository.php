@@ -161,9 +161,9 @@ class PlacesRepository
     {
 
         return Places::where([
-          ["visible", "=", 1],
-          ["deleted", "=", 0]
-        ])
+    ['visible', '=', '1'],
+    ['deleted', '=', '0'],
+])
         ->select(['id',
             'name',
             'description',
