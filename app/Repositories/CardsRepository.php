@@ -93,4 +93,18 @@ class CardsRepository
                 'deleted' => 1
             ]);
     }
+
+    /**
+     * Actualiza la url de la imagen
+     *
+     * @param $id
+     * @param $image_url
+     * @return mixed
+     */
+    public function updateImageUrl($id, $image_url){
+        return Cards::where('id', '=', $id)
+            ->update([
+                'image_url' => $image_url
+            ]);
+    }
 }

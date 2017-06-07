@@ -17,7 +17,7 @@ class HashtagsController extends Controller
     private $hashtagsRepository;
 
     /**
-     * Constructor de CardsController.
+     * Constructor de HashtagsController.
      *
      * @param $cardsRepository $repository
      */

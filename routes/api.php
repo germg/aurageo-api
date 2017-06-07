@@ -16,8 +16,8 @@ use Illuminate\Http\Request;
 Route::group(['prefix' => 'users'], function () {
     Route::put('/create', 'Business\UsersController@create');
     Route::delete('/delete/{id}', 'Business\UsersController@delete');
-    Route::get('glogin',array('as'=>'glogin','uses'=>'UserController@googleLogin')) ;
-    Route::get('google-user',array('as'=>'user.glist','uses'=>'UserController@listGoogleUser')) ;
+    Route::get('glogin',array('as'=>'glogin','uses'=>'Business\UsersController@googleLogin')) ;
+    Route::get('google-user',array('as'=>'user.glist','uses'=>'Business\UsersController@listGoogleUser')) ;
 });
 
 Route::group(['prefix' => 'hashtags'], function () {
@@ -46,4 +46,9 @@ Route::group(['prefix' => 'places'], function () {
     Route::put('/create', 'Business\PlacesController@create');
     Route::post('/edit', 'Business\PlacesController@edit');
     Route::delete('/delete/{id}', 'Business\PlacesController@delete');
+});
+
+Route::group(['prefix' => 'multimedia'], function () {
+    Route::post('/upload-avatar/place/{id}', 'Business\MultimediaController@uploadPlaceAvatar');
+    Route::post('/upload-card-image/place/{place_id}/card/{card_id}', 'Business\MultimediaController@uploadCardImage');
 });

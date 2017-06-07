@@ -182,4 +182,18 @@ class PlacesRepository
             ->havingRaw('distance < ' . env("PLACES_SEARCH_DISTANCE"))
             ->get()->take(env("LIMIT_SEARCH_DISTANCE"));
     }
+
+    /**
+     * Actualiza la url de una imagen
+     *
+     * @param $id
+     * @param $avatar_url
+     * @return mixed
+     */
+    public function updateAvatarUrl($id, $avatar_url){
+        return Places::where('id', '=', $id)
+            ->update([
+                'avatar_url' => $avatar_url
+            ]);
+    }
 }
