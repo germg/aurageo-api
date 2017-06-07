@@ -52,3 +52,8 @@ Route::group(['prefix' => 'multimedia'], function () {
     Route::post('/upload-avatar/place/{id}', 'Business\MultimediaController@uploadPlaceAvatar');
     Route::post('/upload-card-image/place/{place_id}/card/{card_id}', 'Business\MultimediaController@uploadCardImage');
 });
+
+Route::group(['prefix' => 'bookmarks'], function () {
+    Route::put('/create/user/{user_id}/place/{place_id}', 'Business\BookmarksController@create');
+    Route::delete('/delete/user/{user_id}/place/{place_id}', 'Business\BookmarksController@delete');
+});

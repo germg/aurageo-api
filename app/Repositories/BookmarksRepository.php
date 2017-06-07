@@ -48,29 +48,40 @@ class BookmarksRepository
             ]);
     }
 
+    public function getByUserIdAndPlaceId($user_id, $place_id){
+        return Bookmarks::where([
+            ['user_id', '=', $user_id],
+            ['place_id', '=', $place_id]
+        ])->first();
+    }
+
     /**
-     * Crea un hashtag
+     * Crea un bookmark
      *
-     * @param $data
+     * @param $user_id
+     * @param $place_id
      * @return mixed
      */
-    public function create($data)
+    public function create($user_id, $place_id)
     {
         return Bookmarks::create([
-            'user_id' => $data->userId,
-            'place_id' => $data->placeId,
+            'user_id' => $user_id,
+            'place_id' => $place_id,
         ]);
     }
 
     /**
-     * Elimina un bookmark por su id
+     * Elimina un bookmark por su user_id y place_id
      *
      * @param $id
      * @return mixed
      */
-    public function delete($id)
+    public function delete($user_id, $place_id)
     {
-        $user = Bookmarks::find($id);
-        return $user->delete();
+        $bookmark = Bookmarks::where([
+            ['user_id', '=', $user_id],
+            ['place_id', '=', $place_id]
+        ]);
+        return $bookmark->delete();
     }
 }

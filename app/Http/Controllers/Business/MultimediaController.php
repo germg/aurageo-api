@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Business;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator;
-//use App\Repositories\HashtagsRepository as HashtagsRepository;
 use App\Repositories\PlacesRepository as PlacesRepository;
 use App\Repositories\CardsRepository as CardsRepository;
 use Mockery\CountValidator\Exception;
