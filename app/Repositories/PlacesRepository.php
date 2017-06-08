@@ -27,7 +27,7 @@ class PlacesRepository
                 'latitude',
                 'longitude',
                 'deleted',
-                'avatar_url as avatarUrl',
+                DB::raw('concat("' . env('APP_URL') .'", avatar_url) as avatarUrl'),
                 'places.user_id as userId',
                 'visible',
                 'address']);
@@ -49,7 +49,7 @@ class PlacesRepository
             'latitude',
             'longitude',
             'deleted',
-            'avatar_url as avatarUrl',
+            DB::raw('concat("' . env('APP_URL') .'", avatar_url) as avatarUrl'),
             'places.user_id as userId',
             'visible',
             'address']);
@@ -69,7 +69,7 @@ class PlacesRepository
             'latitude',
             'longitude',
             'deleted',
-            'avatar_url as avatarUrl',
+            DB::raw('concat("' . env('APP_URL') .'", avatar_url) as avatarUrl'),
             'user_id as userId',
             'visible',
             'address']);
@@ -90,7 +90,7 @@ class PlacesRepository
                 'latitude',
                 'longitude',
                 'deleted',
-                'avatar_url as avatarUrl',
+                DB::raw('concat("' . env('APP_URL') .'", avatar_url) as avatarUrl'),
                 'user_id as userId',
                 'visible',
                 'address'])
@@ -172,7 +172,7 @@ class PlacesRepository
             'latitude',
             'longitude',
             'deleted',
-            'avatar_url as avatarUrl',
+            DB::raw('concat("' . env('APP_URL') .'", avatar_url) as avatarUrl'),
             'user_id as userId',
             'visible',
             'address',

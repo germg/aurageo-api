@@ -31,7 +31,7 @@ Route::group(['prefix' => 'hashtags'], function () {
 
 Route::group(['prefix' => 'cards'], function () {
     Route::get('/{id}', 'Business\CardsController@getById');
-    Route::get('/place', 'Business\CardsController@getByPlaceId');
+    Route::get('/place/{id}', 'Business\CardsController@getByPlaceId');
     Route::put('/create', 'Business\CardsController@create');
     Route::post('/edit', 'Business\CardsController@edit');
     Route::delete('/delete/{id}', 'Business\CardsController@delete');
@@ -40,7 +40,6 @@ Route::group(['prefix' => 'cards'], function () {
 Route::group(['prefix' => 'places'], function () {
     Route::get('/latitude/{latitude}/longitude/{longitude}', 'Business\PlacesController@getPlacesNearToCoordinate');
     Route::get('/{id}', 'Business\PlacesController@getById');
-    Route::get('/', 'Business\PlacesController@get_all');
     Route::get('/user/{user_id}', 'Business\PlacesController@getByUserId');
     Route::get('/bookmarked/user/{user_id}', 'Business\PlacesController@getBookmarkedByUserId');
     Route::put('/create', 'Business\PlacesController@create');
@@ -49,8 +48,8 @@ Route::group(['prefix' => 'places'], function () {
 });
 
 Route::group(['prefix' => 'multimedia'], function () {
-    Route::post('/upload-avatar/place/{id}', 'Business\MultimediaController@uploadPlaceAvatar');
-    Route::post('/upload-card-image/place/{place_id}/card/{card_id}', 'Business\MultimediaController@uploadCardImage');
+    Route::post('/upload-avatar/{id}', 'Business\MultimediaController@uploadPlaceAvatar');
+    Route::post('/upload-card-image/{id}', 'Business\MultimediaController@uploadCardImage');
 });
 
 Route::group(['prefix' => 'bookmarks'], function () {

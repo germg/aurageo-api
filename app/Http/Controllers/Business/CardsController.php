@@ -59,10 +59,10 @@ class CardsController extends Controller
      * @param $id
      * @return Response
      */
-    public function getByPlaceId($place_id)
+    public function getByPlaceId($id)
     {
         try {
-            return response($this->cardsRepository->getByPlaceId($place_id), Response::HTTP_OK);
+            return response($this->cardsRepository->getByPlaceId($id), Response::HTTP_OK);
         } catch (Exception $e) {
             return response("Ocurrió un error al obtener las tarjetas por place_id.", Response::HTTP_FORBIDDEN);
         }

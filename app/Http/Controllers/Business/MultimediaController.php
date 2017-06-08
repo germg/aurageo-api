@@ -38,7 +38,7 @@ class MultimediaController extends Controller
         try {
             if (!empty($_FILES)) {
 
-                $uploadFolder = '/uploads/place' . $id . '/';
+                $uploadFolder = '/uploads/places/';
                 $fullPath = $this->basePath . $uploadFolder;
 
                 // Si no existe la carpeta del lugar se crea
@@ -46,13 +46,15 @@ class MultimediaController extends Controller
                     mkdir($fullPath, 0775, true);
                 }
 
-                $place = $this->placesRepository->getById($id);
+                if (isset($id) && $id !== 0) {
+                    $place = $this->placesRepository->getById($id);
 
-                // Se elimina fisicamente la imagen anterior si tiene y existe
-                if (isset($place->avatarUrl) && !empty($place->avatarUrl)) {
-                    $path = $this->basePath . $place->avatarUrl;
-                    if (file_exists($path)) {
-                        unlink($path);
+                    // Se elimina fisicamente la imagen anterior si tiene y existe
+                    if (isset($place->avatarUrl) && !empty($place->avatarUrl)) {
+                        $path = $this->basePath . $place->avatarUrl;
+                        if (file_exists($path)) {
+                            unlink($path);
+                        }
                     }
                 }
 
@@ -71,11 +73,14 @@ class MultimediaController extends Controller
                 // Se guarda el archivo
                 move_uploaded_file($tempPath, $uploadPath);
 
-                // Se actualiza en la url en BD
-                $this->placesRepository->updateAvatarUrl($id, $newName);
+                if (isset($id) && $id !== 0) {
+                    // Se actualiza en la url en BD
+                    $this->placesRepository->updateAvatarUrl($id, $newName);
+                }
 
                 return response(env('APP_URL') . $newName, Response::HTTP_OK);
             }
+
 
             return response("No se ha encontrado la imagen para guardar.", Response::HTTP_FORBIDDEN);
         } catch (Exception $e) {
@@ -83,11 +88,11 @@ class MultimediaController extends Controller
         }
     }
 
-    public function uploadCardImage($place_id, $card_id)
+    public function uploadCardImage($id)
     {
         try {
             if (!empty($_FILES)) {
-                $uploadFolder = '/uploads/place' . $place_id . '/card' . $card_id . '/';
+                $uploadFolder = '/uploads/cards/';
                 $fullPath = $this->basePath . $uploadFolder;
 
                 // Si no existe la carpeta se crea
@@ -95,13 +100,15 @@ class MultimediaController extends Controller
                     mkdir($fullPath, 0775, true);
                 }
 
-                $card = $this->cardsRepository->getById($card_id);
+                if (isset($id) && $id !== 0) {
+                    $card = $this->cardsRepository->getById($id);
 
-                // Se elimina fisicamente la imagen anterior si tiene y existe
-                if (isset($card->imageUrl) && !empty($card->imageUrl)) {
-                    $path = $this->basePath . $card->imageUrl;
-                    if (file_exists($path)) {
-                        unlink($path);
+                    // Se elimina fisicamente la imagen anterior si tiene y existe
+                    if (isset($card->imageUrl) && !empty($card->imageUrl)) {
+                        $path = $this->basePath . $card->imageUrl;
+                        if (file_exists($path)) {
+                            unlink($path);
+                        }
                     }
                 }
 
@@ -119,8 +126,10 @@ class MultimediaController extends Controller
                 // Se guarda el archivo
                 move_uploaded_file($tempPath, $uploadPath);
 
-                // Se guarda en BD
-                $this->cardsRepository->updateImageUrl($card_id, $newName);
+                if (isset($id) && $id !== 0) {
+                    // Se guarda en BD
+                    $this->cardsRepository->updateImageUrl($id, $newName);
+                }
 
                 return response(env('APP_URL') . $newName, Response::HTTP_OK);
             }

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Cards;
+use Illuminate\Support\Facades\DB;
 
 class CardsRepository
 {
@@ -19,7 +20,7 @@ class CardsRepository
             ->get([
                 'id',
                 'place_id as placeId',
-                'image_url as imageUrl',
+                DB::raw('concat("' . env('APP_URL') .'", image_url) as imageUrl'),
                 'description',
                 'created_at as createdAt',
                 'updated_at as updatedAt',
@@ -40,7 +41,7 @@ class CardsRepository
             ->get([
                 'id',
                 'place_id as placeId',
-                'image_url as imageUrl',
+                DB::raw('concat("' . env('APP_URL') .'", image_url) as imageUrl'),
                 'description',
                 'created_at as createdAt',
                 'updated_at as updatedAt',
