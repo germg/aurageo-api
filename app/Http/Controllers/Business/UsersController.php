@@ -127,7 +127,8 @@ class UsersController extends Controller
                 return response('No se pudo crear el token.', Response::HTTP_FORBIDDEN);
             }
 
-            $user->auth = compact('token');
+            $auth = compact('token');
+            $user->token = $auth["token"];
 
             return response($user, Response::HTTP_OK);
             //return redirect()->route('user.glist');
