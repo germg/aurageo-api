@@ -84,7 +84,6 @@ class UsersController extends Controller
 // Google Login
     public function googleLogin(Request $request)
     {
-
         $google_redirect_url = route('glogin');
         $gClient = new \Google_Client();
         $gClient->setApplicationName(env('SERVICES_GOOGLE_APP_NAME'));
@@ -113,20 +112,20 @@ class UsersController extends Controller
             $e = $guser['email'];
             $user = $this->usersRepository->getByEmail($e);
 
-            dd($guser);
-
             if ($user) {
-//logged your user via auth login
-            } else {
-                //register your user with response data
+                //logged your user via auth login
             }
-            return redirect()->route('user.glist');
+
+            //TODO: Ver que haces si no esta registrado en Google
+
+            //return redirect()->route('user.glist');
         } else {
             //For Guest user, get google login url
             $authUrl = $gClient->createAuthUrl();
             return redirect()->to($authUrl);
         }
     }
+
     // public function listGoogleUser(Request $request){
     //   $users = User::orderBy('id','DESC')->paginate(5);
     //  return view('users.list',compact('users'))->with('i', ($request->input('page', 1) - 1) * 5);;

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 class PlacesRepository
 {
     const MODEL = 'App\Models\Places';
+    const UPLOADS_FOLDER = '/uploads';
 
     /**
      *  Obtiene una lista de lugares marcado como favorito por user_id
@@ -105,11 +106,11 @@ class PlacesRepository
      */
     public function create($data)
     {
-        $avatar_url = substr($data->avatarUrl, strpos($data->avatarUrl,"/uploads"));
+        $avatar_url = substr($data->avatarUrl, strpos($data->avatarUrl, self::UPLOADS_FOLDER));
 
         return Places::create([
             'name' => $data->name,
-            'description' => isset($data->description) ? $data->description : null,
+            'description' => isset($data->description) ? $data->description : null, 
             'latitude' => $data->latitude,
             'longitude' => $data->longitude,
             'deleted' => $data->deleted,

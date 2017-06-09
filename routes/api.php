@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['prefix' => 'users'], function () {
+Route::group(['middleware' => 'web','prefix' => 'users'], function () {
     Route::put('/create', 'Business\UsersController@create');
     Route::delete('/delete/{id}', 'Business\UsersController@delete');
     Route::get('glogin',array('as'=>'glogin','uses'=>'Business\UsersController@googleLogin')) ;

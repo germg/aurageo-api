@@ -17,7 +17,7 @@
                 <h2>Logged Google User List</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-danger" href="{{ route('glogin') }}"> Login with Google</a>
+                <a class="btn btn-danger" href="http://localhost:8000/api/users/glogin"> Login with Google</a>
             </div>
         </div>
     </div>
