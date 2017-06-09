@@ -105,13 +105,15 @@ class PlacesRepository
      */
     public function create($data)
     {
+        $avatar_url = substr($data->avatarUrl, strpos($data->avatarUrl,"/uploads"));
+
         return Places::create([
             'name' => $data->name,
             'description' => isset($data->description) ? $data->description : null,
             'latitude' => $data->latitude,
             'longitude' => $data->longitude,
             'deleted' => $data->deleted,
-            'avatar_url' => $data->avatarUrl,
+            'avatar_url' => $avatar_url,
             'user_id' => $data->userId,
             'visible' => $data->visible,
             'address' => $data->address
@@ -133,7 +135,7 @@ class PlacesRepository
                 'latitude' => $data->latitude,
                 'longitude' => $data->longitude,
                 'deleted' => $data->deleted,
-                'avatar_url' => $data->avatarUrl,
+                //'avatar_url' => $data->avatarUrl, // Por el momento en editar no se actualiza la url del avatar
                 'user_id' => $data->userId,
                 'visible' => $data->visible,
                 'address' => $data->address
