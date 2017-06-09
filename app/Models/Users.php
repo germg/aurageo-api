@@ -3,17 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
-class Users extends Model
+class Users extends Model implements AuthenticatableContract
 {
+    use Authenticatable;
+
     // Atributo importante para que no intente guardar los campos: updated_at y created_at
     public $timestamps = false;
     protected $fillable = [
         'name', 'email'
-    ];
-
-    protected $hidden = [
-        'remember_token',
     ];
 
     // Relacion NaN con Places

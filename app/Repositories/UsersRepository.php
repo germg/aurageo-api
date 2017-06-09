@@ -39,7 +39,8 @@ class UsersRepository
     public function create($data)
     {
         return Users::create([
-            'email' => $data->email
+            'email' => $data->email,
+            'name' => $data->name
         ]);
     }
 

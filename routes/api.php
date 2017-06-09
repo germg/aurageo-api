@@ -37,7 +37,7 @@ Route::group(['prefix' => 'cards'], function () {
     Route::delete('/delete/{id}', 'Business\CardsController@delete');
 });
 
-Route::group(['prefix' => 'places'], function () {
+Route::group(['middleware' => 'jwt.auth', 'prefix' => 'places'], function () {
     Route::get('/latitude/{latitude}/longitude/{longitude}', 'Business\PlacesController@getPlacesNearToCoordinate');
     Route::get('/{id}', 'Business\PlacesController@getById');
     Route::get('/user/{user_id}', 'Business\PlacesController@getByUserId');
