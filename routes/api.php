@@ -16,8 +16,7 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => 'web','prefix' => 'users'], function () {
     Route::put('/create', 'Business\UsersController@create');
     Route::delete('/delete/{id}', 'Business\UsersController@delete');
-    Route::get('glogin',array('as'=>'glogin','uses'=>'Business\UsersController@googleLogin')) ;
-    Route::get('google-user',array('as'=>'user.glist','uses'=>'Business\UsersController@listGoogleUser')) ;
+    Route::post('/login', 'Business\UsersController@login');
 });
 
 Route::group(['prefix' => 'hashtags'], function () {
@@ -37,7 +36,7 @@ Route::group(['prefix' => 'cards'], function () {
     Route::delete('/delete/{id}', 'Business\CardsController@delete');
 });
 
-Route::group([/*'middleware' => 'jwt.auth', */'prefix' => 'places'], function () {
+Route::group(['middleware' => 'jwt.auth','prefix' => 'places'], function () {
     Route::get('/latitude/{latitude}/longitude/{longitude}', 'Business\PlacesController@getPlacesNearToCoordinate');
     Route::get('/{id}', 'Business\PlacesController@getById');
     Route::get('/user/{user_id}', 'Business\PlacesController@getByUserId');

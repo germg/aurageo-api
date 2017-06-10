@@ -13,7 +13,8 @@ class UsersRepository
      *
      * @return mixed
      */
-    public function get(){
+    public function get()
+    {
         return Users::get();
     }
 
@@ -23,13 +24,21 @@ class UsersRepository
      * @param $id
      * @return mixed
      */
-    public function getById($id){
+    public function getById($id)
+    {
         return Users::find($id);
     }
 
-    public function getByEmail($email){
-      return Users::where('email',$email)->first();
+    public function getByGoogleId($id)
+    {
+        return Users::where('google_id', $id)->first();
     }
+
+    public function getByEmail($email)
+    {
+        return Users::where('email', $email)->first();
+    }
+
     /**
      * Crea un usuario
      *
@@ -40,7 +49,8 @@ class UsersRepository
     {
         return Users::create([
             'email' => $data->email,
-            'name' => $data->name
+            'name' => $data->name,
+            'google_id' => $data->sub
         ]);
     }
 
@@ -52,8 +62,8 @@ class UsersRepository
      */
     public function edit($data)
     {
-       return Users::where('id', '=', $data->id)
-                ->update(['email' => $data->email]);
+        return Users::where('id', '=', $data->id)
+            ->update(['email' => $data->email]);
     }
 
     /**

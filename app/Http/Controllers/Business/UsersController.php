@@ -76,69 +76,60 @@ class UsersController extends Controller
     public function delete($id)
     {
         try {
-            $res = $this->usersRepository->delete($id);
+            $this->usersRepository->delete($id);
             return response(Response::HTTP_OK);
         } catch (Exception $e) {
             return response("Ocurrió un error al eliminar el usuario.", Response::HTTP_FORBIDDEN);
         }
     }
 
-// Google Login
-    public function googleLogin(Request $request)
+    /**
+     * Realiza el login con Google y genera un token
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function login(Request $request)
     {
-        $google_redirect_url = route('glogin');
-        $gClient = new \Google_Client();
-        $gClient->setApplicationName(env('SERVICES_GOOGLE_APP_NAME'));
-        $gClient->setClientId(env('SERVICES_GOOGLE_CLIENT_ID'));
-        $gClient->setClientSecret(env('SERVICES_GOOGLE_CLIENT_SECRET'));
-        $gClient->setRedirectUri($google_redirect_url);
-        $gClient->setDeveloperKey(env('SERVICES_GOOGLE_API_KEY'));
-        $gClient->setScopes(array(
-            'https://www.googleapis.com/auth/plus.me',
-            'https://www.googleapis.com/auth/userinfo.email',
-            'https://www.googleapis.com/auth/userinfo.profile',
-        ));
-        $google_oauthV2 = new \Google_Service_Oauth2($gClient);
-        if ($request->get('code')) {
-            $gClient->authenticate($request->get('code'));
-            $request->session()->put('token', $gClient->getAccessToken());
-        }
-        if ($request->session()->get('token')) {
-            $gClient->setAccessToken($request->session()->get('token'));
-        }
-        if ($gClient->getAccessToken()) {
-            //For logged in user, get details from google using access token
-            $guser = (object)$google_oauthV2->userinfo->get();
+        try {
+            $data = (object)$request->all();
+            $client = new \Google_Client();
+            $payload = (object)$client->verifyIdToken($data->token);
 
-            $request->session()->put('name', $guser->name);
-            $e = $guser->email;
-            $user = $this->usersRepository->getByEmail($e);
+            if ($payload) {
+                $user = $this->usersRepository->getByGoogleId($payload->sub);
 
-            if (!$user) {
-                //logged your user via auth login
+                if (!$user) {
+                    $user->id = $this->usersRepository->create($payload);
+                    $user->email = $payload->email;
+                    $user->name = $payload->name;
+                    $user->google_id = $payload->sub;
+                }
 
-                $this->usersRepository->create($guser);
-                $user = $this->usersRepository->getByEmail($e);
+                try {
+                    $token = JWTAuth::fromUser($user, array(date("Y/m/d h:i:s")));
+                } catch (JWTException $e) {
+                    return response('No se pudo crear el token.', Response::HTTP_FORBIDDEN);
+                }
+
+                $auth = compact('token');
+                $user->token = $auth["token"];
+
+                return response($user, Response::HTTP_OK);
+            } else {
+                return response("No se pudo verificar el token de Google.", Response::HTTP_FORBIDDEN);
             }
-
-            try {
-                $token = JWTAuth::fromUser($user, array(date("Y/m/d h:i:s")));
-            } catch (JWTException $e) {
-                return response('No se pudo crear el token.', Response::HTTP_FORBIDDEN);
-            }
-
-            $auth = compact('token');
-            $user->token = $auth["token"];
-
-            return response($user, Response::HTTP_OK);
-            //return redirect()->route('user.glist');
-        } else {
-            //For Guest user, get google login url
-            $authUrl = $gClient->createAuthUrl();
-            return redirect()->to($authUrl);
+        } catch (Exception $e) {
+            return response("Ocurrió un error al autenticar el usuario.", Response::HTTP_FORBIDDEN);
         }
     }
 
+    /**
+     * Finaliza la sesión e invalida el token
+     *
+     * @param Request $request
+     * @return Response
+     */
     public function logout(Request $request)
     {
         $data = (object)$request->all();
@@ -147,37 +138,5 @@ class UsersController extends Controller
             JWTAuth::setToken($t)->invalidate();
         }
         return response(Response::HTTP_OK);
-    }
-
-    // public function listGoogleUser(Request $request){
-    //   $users = User::orderBy('id','DESC')->paginate(5);
-    //  return view('users.list',compact('users'))->with('i', ($request->input('page', 1) - 1) * 5);;
-    //  return "";
-    // }
-
-    public function getAuthenticatedUser()
-    {
-        try {
-
-            if (!$user = JWTAuth::parseToken()->authenticate()) {
-                return response()->json(['user_not_found'], 404);
-            }
-
-        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-
-            return response()->json(['token_expired'], $e->getStatusCode());
-
-        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-
-            return response()->json(['token_invalid'], $e->getStatusCode());
-
-        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
-
-            return response()->json(['token_absent'], $e->getStatusCode());
-
-        }
-
-        // the token is valid and we have found the user via the sub claim
-        return response()->json(compact('user'));
     }
 }
