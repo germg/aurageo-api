@@ -29,11 +29,23 @@ class UsersRepository
         return Users::find($id);
     }
 
+    /**
+     * Obtiene un usuario por el id de Google
+     *
+     * @param $id
+     * @return mixed
+     */
     public function getByGoogleId($id)
     {
         return Users::where('google_id', $id)->first();
     }
 
+    /**
+     * Obtiene un usuario por su email
+     *
+     * @param $email
+     * @return mixed
+     */
     public function getByEmail($email)
     {
         return Users::where('email', $email)->first();
