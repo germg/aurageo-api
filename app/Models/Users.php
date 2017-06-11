@@ -17,13 +17,13 @@ class Users extends Model implements AuthenticatableContract
     ];
 
     // Relacion NaN con Places
-    public function places()
+    public function bookmarks()
     {
         return $this->belongsToMany('App\Models\Places', 'bookmarks', 'user_id', 'place_id');
     }
 
     // Relacion 1aN con Places
-    public function placesN()
+    public function places()
     {
         return $this->hasMany('App\Models\Places', 'user_id');
     }

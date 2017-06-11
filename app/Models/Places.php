@@ -11,7 +11,7 @@ class Places extends Model
     protected $fillable = ['name','description','latitude','longitude','deleted','avatar_url','user_id','visible','address'];
 
     // Relacion NaN con Users
-    public function users()
+    public function bookmarks()
     {
         return $this->belongsToMany('App\Models\Users', 'bookmarks', 'user_id', 'place_id');
     }
@@ -19,6 +19,6 @@ class Places extends Model
     // Relacion 1aN con users
     public function user()
     {
-        return $this->belongsTo('App\Models\User', 'user_id');
+        return $this->belongsTo('App\Models\Users', 'user_id');
     }
 }

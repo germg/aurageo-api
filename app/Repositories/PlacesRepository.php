@@ -4,11 +4,54 @@ namespace App\Repositories;
 
 use App\Models\Places;
 use Illuminate\Support\Facades\DB;
+use App\Repositories\BookmarksRepository as BookmarksRepository;
 
 class PlacesRepository
 {
     const MODEL = 'App\Models\Places';
     const UPLOADS_FOLDER = '/uploads';
+
+    private $bookmarksRepository;
+
+    public function __construct(BookmarksRepository $bookmarksRepository)
+    {
+        $this->bookmarksRepository = $bookmarksRepository;
+    }
+
+    /**
+     * Sabe decir si el lugar esta marcado como favorito
+     *
+     * @param $id
+     * @param $current_user_id
+     * @return bool
+     */
+    private function isBookmarked($id, $current_user_id)
+    {
+        return $this->bookmarksRepository->getByUserIdAndPlaceId($current_user_id, $id) !== null;
+    }
+
+    /**
+     * Completa atributos calculados
+     *
+     * @param $data
+     * @param $current_user_id
+     */
+    private function completeAttributes(&$data, $current_user_id)
+    {
+        if ($data) {
+            if (is_array($data)) {
+                for($i = 0; $i < sizeof($data); $i++){
+                    $data[$i]["bookmarked"] = $this->isBookmarked($data[$i]["id"], $current_user_id);
+                    $data[$i]["owned"] = $data[$i]["userId"] === $current_user_id;
+                }
+            } else {
+                if(isset($data->id)) {
+                    $data->bookmarked = $this->isBookmarked($data->id, $current_user_id);
+                    $data->owned = $data->userId === $current_user_id;
+                }
+            }
+        }
+    }
 
     /**
      *  Obtiene una lista de lugares marcado como favorito por user_id
@@ -16,9 +59,9 @@ class PlacesRepository
      * @param $user_id
      * @return mixed
      */
-    public function getBookmarkedByUserId($user_id)
+    public function getBookmarkedByUserId($user_id, $current_user_id)
     {
-        return Places::join('bookmarks', 'bookmarks.place_id', 'id')
+        $places = Places::join('bookmarks', 'bookmarks.place_id', 'id')
             ->where([
                 ['bookmarks.user_id', '=', $user_id],
                 ['deleted', '=', 0]
@@ -28,10 +71,14 @@ class PlacesRepository
                 'latitude',
                 'longitude',
                 'deleted',
-                DB::raw('concat("' . env('APP_URL') .'", avatar_url) as avatarUrl'),
+                DB::raw('concat("' . env('APP_URL') . '", avatar_url) as avatarUrl'),
                 'places.user_id as userId',
                 'visible',
                 'address']);
+
+        $this->completeAttributes($places, $current_user_id);
+
+        return $places;
     }
 
     /**
@@ -39,9 +86,9 @@ class PlacesRepository
      * @param $user_id
      * @return mixed
      */
-    public function getByUserId($user_id)
+    public function getByUserId($user_id, $current_user_id)
     {
-        return Places::where([
+        $places = Places::where([
             ['user_id', '=', $user_id],
             ['deleted', '=', 0]
         ])->get(['id',
@@ -50,10 +97,14 @@ class PlacesRepository
             'latitude',
             'longitude',
             'deleted',
-            DB::raw('concat("' . env('APP_URL') .'", avatar_url) as avatarUrl'),
+            DB::raw('concat("' . env('APP_URL') . '", avatar_url) as avatarUrl'),
             'places.user_id as userId',
             'visible',
-            'address']);
+            'address'])->toArray();
+
+        $this->completeAttributes($places, $current_user_id);
+
+        return $places;
     }
 
     /**
@@ -62,18 +113,22 @@ class PlacesRepository
      * @param $id
      * @return mixed
      */
-    public function get($id)
+    public function get($id, $current_user_id)
     {
-        return Places::find(['id',
+        $place = Places::find(['id',
             'name',
             'description',
             'latitude',
             'longitude',
             'deleted',
-            DB::raw('concat("' . env('APP_URL') .'", avatar_url) as avatarUrl'),
+            DB::raw('concat("' . env('APP_URL') . '", avatar_url) as avatarUrl'),
             'user_id as userId',
             'visible',
             'address']);
+
+        $this->completeAttributes($place, $current_user_id);
+
+        return $place;
     }
 
     /**
@@ -82,20 +137,25 @@ class PlacesRepository
      * @param $id
      * @return mixed
      */
-    public function getById($id)
+    public function getById($id, $current_user_id)
     {
-        return Places::where('id', '=', $id)
+        $place = Places::where('id', $id)
             ->get(['id',
                 'name',
                 'description',
                 'latitude',
                 'longitude',
                 'deleted',
-                DB::raw('concat("' . env('APP_URL') .'", avatar_url) as avatarUrl'),
+                DB::raw('concat("' . env('APP_URL') . '", avatar_url) as avatarUrl'),
                 'user_id as userId',
                 'visible',
-                'address'])
+                'address'
+            ])
             ->first();
+
+        $this->completeAttributes($place, $current_user_id);
+
+        return $place;
     }
 
     /**
@@ -110,7 +170,7 @@ class PlacesRepository
 
         return Places::create([
             'name' => $data->name,
-            'description' => isset($data->description) ? $data->description : null, 
+            'description' => isset($data->description) ? $data->description : null,
             'latitude' => $data->latitude,
             'longitude' => $data->longitude,
             'deleted' => $data->deleted,
@@ -164,9 +224,9 @@ class PlacesRepository
      * @param $langitude
      * @return mixed
      */
-    public function getPlacesNearToCoordinate($latitude, $langitude)
+    public function getPlacesNearToCoordinate($latitude, $langitude, $user_id)
     {
-        return Places::where([
+        $places = Places::where([
             ['visible', '=', '1'],
             ['deleted', '=', '0'],
         ])->select(['id',
@@ -175,7 +235,7 @@ class PlacesRepository
             'latitude',
             'longitude',
             'deleted',
-            DB::raw('concat("' . env('APP_URL') .'", avatar_url) as avatarUrl'),
+            DB::raw('concat("' . env('APP_URL') . '", avatar_url) as avatarUrl'),
             'user_id as userId',
             'visible',
             'address',
@@ -184,6 +244,13 @@ class PlacesRepository
             ->orderBy('distance')
             ->havingRaw('distance < ' . env("PLACES_SEARCH_DISTANCE"))
             ->get()->take(env("LIMIT_SEARCH_DISTANCE"));
+
+        if ($places) {
+            foreach ($places as $place) {
+                $place->bookmarked = $this->isBookmarked($place->id);
+                $place->owned = $place->user_id === $user_id;
+            }
+        }
     }
 
     /**
@@ -193,7 +260,8 @@ class PlacesRepository
      * @param $avatar_url
      * @return mixed
      */
-    public function updateAvatarUrl($id, $avatar_url){
+    public function updateAvatarUrl($id, $avatar_url)
+    {
         return Places::where('id', '=', $id)
             ->update([
                 'avatar_url' => $avatar_url

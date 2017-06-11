@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Business;
 
 use App\Http\Controllers\Controller;
+use App\Models\Users;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -100,10 +101,7 @@ class UsersController extends Controller
                 $user = $this->usersRepository->getByGoogleId($payload->sub);
 
                 if (!$user) {
-                    $user->id = $this->usersRepository->create($payload);
-                    $user->email = $payload->email;
-                    $user->name = $payload->name;
-                    $user->google_id = $payload->sub;
+                    $user = $this->usersRepository->create($payload);
                 }
 
                 try {
@@ -138,5 +136,21 @@ class UsersController extends Controller
             JWTAuth::setToken($t)->invalidate();
         }
         return response(Response::HTTP_OK);
+    }
+
+    public function test(){
+
+        $user = $this->usersRepository->getById(5);
+
+        try {
+            $token = JWTAuth::fromUser($user, array(date("Y/m/d h:i:s")));
+        } catch (JWTException $e) {
+            return response('No se pudo crear el token.', Response::HTTP_FORBIDDEN);
+        }
+
+        $auth = compact('token');
+        $user->token = $auth["token"];
+
+        return response($user, Response::HTTP_OK);
     }
 }

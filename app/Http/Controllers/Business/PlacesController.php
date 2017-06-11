@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Business;
 
-use App\Http\Controllers\Controller;
-use App\Services\PhpGeoService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\PlacesRepository as PlacesRepository;
 use Mockery\CountValidator\Exception;
 
-class PlacesController extends Controller
+class PlacesController extends BaseController
 {
     /**
      * Repositorio lugares.
@@ -54,7 +52,7 @@ class PlacesController extends Controller
     public function getBookmarkedByUserId($user_id)
     {
         try {
-            return response($this->placesRepository->getBookmarkedByUserId($user_id), Response::HTTP_OK);
+            return response($this->placesRepository->getBookmarkedByUserId($user_id, $this->getAuthenticatedUser()->id), Response::HTTP_OK);
         } catch (Exception $e) {
             return response("Ocurrió un error al intentar obtener lugares marcados como favorito por user_id.", Response::HTTP_FORBIDDEN);
         }
@@ -69,7 +67,7 @@ class PlacesController extends Controller
     public function getPlacesNearToCoordinate($latitude, $longitude)
     {
         try {
-            return response($this->placesRepository->getPlacesNearToCoordinate($latitude, $longitude), Response::HTTP_OK);
+            return response($this->placesRepository->getPlacesNearToCoordinate($latitude, $longitude, $this->getAuthenticatedUser()->id), Response::HTTP_OK);
         } catch (Exception $e) {
             return response("Ocurrió un error al intentar obtener lugares cercanos a una coordenada.", Response::HTTP_FORBIDDEN);
         }
@@ -83,7 +81,7 @@ class PlacesController extends Controller
     public function getByUserId($user_id)
     {
         try {
-            return response($this->placesRepository->getByUserId($user_id), Response::HTTP_OK);
+            return response($this->placesRepository->getByUserId($user_id, $this->getAuthenticatedUser()->id), Response::HTTP_OK);
         } catch (Exception $e) {
             return response("Ocurrió un error al intentar obtener lugares por user_id.", Response::HTTP_FORBIDDEN);
         }
@@ -98,7 +96,7 @@ class PlacesController extends Controller
     public function getById($id)
     {
         try {
-            return response($this->placesRepository->getById($id), Response::HTTP_OK);
+            return response($this->placesRepository->getById($id, $this->getAuthenticatedUser()->id), Response::HTTP_OK);
         } catch (Exception $e) {
             return response("Ocurrió un error al obtener el lugar por su id.", Response::HTTP_FORBIDDEN);
         }
