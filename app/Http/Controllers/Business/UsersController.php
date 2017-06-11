@@ -97,7 +97,7 @@ class UsersController extends Controller
             $client = new \Google_Client();
             $payload = (object)$client->verifyIdToken($data->token);
 
-            if ($payload) {
+            if (isset($payload->sub)) {
                 $user = $this->usersRepository->getByGoogleId($payload->sub);
 
                 if (!$user) {

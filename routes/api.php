@@ -13,8 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['middleware' => 'web','prefix' => 'users'], function () {
-    Route::get('/login', 'Business\UsersController@login');
+Route::group(['prefix' => 'users'], function () {
+    Route::post('/login', 'Business\UsersController@login');
     //Route::get('/test', 'Business\UsersController@test');
 });
 

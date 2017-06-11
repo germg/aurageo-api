@@ -13,8 +13,9 @@ class Users extends Model implements AuthenticatableContract
     // Atributo importante para que no intente guardar los campos: updated_at y created_at
     public $timestamps = false;
     protected $fillable = [
-        'name', 'email'
+        'name', 'email', 'google_id'
     ];
+    protected $hidden = ['google_id'];
 
     // Relacion NaN con Places
     public function bookmarks()
