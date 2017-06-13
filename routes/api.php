@@ -28,21 +28,20 @@ Route::group(['prefix' => 'hashtags'], function () {
 });
 
 Route::group(['prefix' => 'cards'], function () {
-    Route::get('/{id}', 'Business\CardsController@getById');
     Route::get('/place/{id}', 'Business\CardsController@getByPlaceId');
-    Route::put('/create', 'Business\CardsController@create');
-    Route::post('/edit', 'Business\CardsController@edit');
-    Route::delete('/delete/{id}', 'Business\CardsController@delete');
+    Route::put('/create', 'Business\CardsController@create')->middleware('jwt.auth');
+    Route::post('/edit', 'Business\CardsController@edit')->middleware('jwt.auth');
+    Route::delete('/delete/{id}', 'Business\CardsController@delete')->middleware('jwt.auth');
 });
 
-Route::group(['middleware' => 'jwt.auth','prefix' => 'places'], function () {
+Route::group(['prefix' => 'places'], function () {
     Route::get('/latitude/{latitude}/longitude/{longitude}', 'Business\PlacesController@getPlacesNearToCoordinate');
     Route::get('/{id}', 'Business\PlacesController@getById');
     Route::get('/user/{user_id}', 'Business\PlacesController@getByUserId');
-    Route::get('/bookmarked/user/{user_id}', 'Business\PlacesController@getBookmarkedByUserId');
-    Route::put('/create', 'Business\PlacesController@create');
-    Route::post('/edit', 'Business\PlacesController@edit');
-    Route::delete('/delete/{id}', 'Business\PlacesController@delete');
+    Route::get('/bookmarked/user/{user_id}', 'Business\PlacesController@getBookmarkedByUserId')->middleware('jwt.auth');
+    Route::put('/create', 'Business\PlacesController@create')->middleware('jwt.auth');
+    Route::post('/edit', 'Business\PlacesController@edit')->middleware('jwt.auth');
+    Route::delete('/delete/{id}', 'Business\PlacesController@delete')->middleware('jwt.auth');
 });
 
 Route::group(['prefix' => 'multimedia'], function () {
