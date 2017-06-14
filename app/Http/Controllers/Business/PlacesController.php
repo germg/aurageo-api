@@ -68,7 +68,7 @@ class PlacesController extends Controller
     public function getPlacesNearToCoordinate($latitude, $longitude)
     {
         try {
-            return response($this->placesRepository->getPlacesNearToCoordinate($latitude, $longitude, $this->getAuthenticatedUser()->id), Response::HTTP_OK);
+            return response($this->placesRepository->getPlacesNearToCoordinate($latitude, $longitude), Response::HTTP_OK);
         } catch (Exception $e) {
             return response("Ocurrió un error al intentar obtener lugares cercanos a una coordenada.", Response::HTTP_FORBIDDEN);
         }

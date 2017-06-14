@@ -226,7 +226,7 @@ class PlacesRepository
      * @param $langitude
      * @return mixed
      */
-    public function getPlacesNearToCoordinate($latitude, $langitude, $user_id)
+    public function getPlacesNearToCoordinate($latitude, $langitude)
     {
         $places = Places::where([
             ['visible', '=', '1'],
@@ -247,12 +247,9 @@ class PlacesRepository
             ->havingRaw('distance < ' . env("PLACES_SEARCH_DISTANCE"))
             ->get()->take(env("LIMIT_SEARCH_DISTANCE"));
 
-        if ($places) {
-            foreach ($places as $place) {
-                $place->bookmarked = $this->isBookmarked($place->id);
-                $place->owned = $place->user_id === $user_id;
-            }
-        }
+        $this->completeAttributes($places);
+
+        return $places;
     }
 
     /**
