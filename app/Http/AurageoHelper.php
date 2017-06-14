@@ -1,20 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Business;
-
-use App\Http\Controllers\Controller;
-use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
-class BaseController extends Controller{
-
-    public function getAuthenticatedUser()
+if (!function_exists('getAuthenticatedUser')) {
+    function getAuthenticatedUser()
     {
         try {
-
-            if (! $user = JWTAuth::parseToken()->authenticate()) {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
                 return response()->json(['user_not_found'], 404);
             }
         } catch (TokenExpiredException $e) {
@@ -36,5 +30,3 @@ class BaseController extends Controller{
         return $user;
     }
 }
-
-?>

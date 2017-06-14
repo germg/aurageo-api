@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Places;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\BookmarksRepository as BookmarksRepository;
 
 class PlacesRepository
 {
@@ -12,10 +11,13 @@ class PlacesRepository
     const UPLOADS_FOLDER = '/uploads';
 
     private $bookmarksRepository;
+    private $current_user_id;
 
     public function __construct(BookmarksRepository $bookmarksRepository)
     {
         $this->bookmarksRepository = $bookmarksRepository;
+        $currentUser = getAuthenticatedUser();
+        $this->current_user_id = isset($currentUser->id) ? $currentUser->id : 0;
     }
 
     /**
@@ -25,9 +27,9 @@ class PlacesRepository
      * @param $current_user_id
      * @return bool
      */
-    private function isBookmarked($id, $current_user_id)
+    private function isBookmarked($id)
     {
-        return $this->bookmarksRepository->getByUserIdAndPlaceId($current_user_id, $id) !== null;
+        return $this->bookmarksRepository->getByUserIdAndPlaceId($this->current_user_id, $id) !== null;
     }
 
     /**
@@ -36,18 +38,18 @@ class PlacesRepository
      * @param $data
      * @param $current_user_id
      */
-    private function completeAttributes(&$data, $current_user_id)
+    private function completeAttributes(&$data)
     {
         if ($data) {
             if (is_array($data)) {
-                for($i = 0; $i < sizeof($data); $i++){
-                    $data[$i]["bookmarked"] = $this->isBookmarked($data[$i]["id"], $current_user_id);
-                    $data[$i]["owned"] = $data[$i]["userId"] === $current_user_id;
+                for ($i = 0; $i < sizeof($data); $i++) {
+                    $data[$i]["bookmarked"] = $this->isBookmarked($data[$i]["id"]);
+                    $data[$i]["owned"] = $data[$i]["userId"] === $this->current_user_id;
                 }
             } else {
-                if(isset($data->id)) {
-                    $data->bookmarked = $this->isBookmarked($data->id, $current_user_id);
-                    $data->owned = $data->userId === $current_user_id;
+                if (isset($data->id)) {
+                    $data->bookmarked = $this->isBookmarked($data->id);
+                    $data->owned = $data->userId === $this->current_user_id;
                 }
             }
         }
@@ -59,7 +61,7 @@ class PlacesRepository
      * @param $user_id
      * @return mixed
      */
-    public function getBookmarkedByUserId($user_id, $current_user_id)
+    public function getBookmarkedByUserId($user_id)
     {
         $places = Places::join('bookmarks', 'bookmarks.place_id', 'id')
             ->where([
@@ -76,7 +78,7 @@ class PlacesRepository
                 'visible',
                 'address']);
 
-        $this->completeAttributes($places, $current_user_id);
+        $this->completeAttributes($places);
 
         return $places;
     }
@@ -86,7 +88,7 @@ class PlacesRepository
      * @param $user_id
      * @return mixed
      */
-    public function getByUserId($user_id, $current_user_id)
+    public function getByUserId($user_id)
     {
         $places = Places::where([
             ['user_id', '=', $user_id],
@@ -102,7 +104,7 @@ class PlacesRepository
             'visible',
             'address'])->toArray();
 
-        $this->completeAttributes($places, $current_user_id);
+        $this->completeAttributes($places);
 
         return $places;
     }
@@ -113,7 +115,7 @@ class PlacesRepository
      * @param $id
      * @return mixed
      */
-    public function get($id, $current_user_id)
+    public function get($id)
     {
         $place = Places::find(['id',
             'name',
@@ -126,7 +128,7 @@ class PlacesRepository
             'visible',
             'address']);
 
-        $this->completeAttributes($place, $current_user_id);
+        $this->completeAttributes($place);
 
         return $place;
     }
@@ -137,7 +139,7 @@ class PlacesRepository
      * @param $id
      * @return mixed
      */
-    public function getById($id, $current_user_id)
+    public function getById($id)
     {
         $place = Places::where('id', $id)
             ->get(['id',
@@ -153,7 +155,7 @@ class PlacesRepository
             ])
             ->first();
 
-        $this->completeAttributes($place, $current_user_id);
+        $this->completeAttributes($place);
 
         return $place;
     }

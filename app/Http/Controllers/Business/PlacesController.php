@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Business;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\PlacesRepository as PlacesRepository;
 use Mockery\CountValidator\Exception;
 
-class PlacesController extends BaseController
+class PlacesController extends Controller
 {
     /**
      * Repositorio lugares.
@@ -52,7 +53,7 @@ class PlacesController extends BaseController
     public function getBookmarkedByUserId($user_id)
     {
         try {
-            return response($this->placesRepository->getBookmarkedByUserId($user_id, $this->getAuthenticatedUser()->id), Response::HTTP_OK);
+            return response($this->placesRepository->getBookmarkedByUserId($user_id), Response::HTTP_OK);
         } catch (Exception $e) {
             return response("Ocurrió un error al intentar obtener lugares marcados como favorito por user_id.", Response::HTTP_FORBIDDEN);
         }
@@ -81,7 +82,7 @@ class PlacesController extends BaseController
     public function getByUserId($user_id)
     {
         try {
-            return response($this->placesRepository->getByUserId($user_id, $this->getAuthenticatedUser()->id), Response::HTTP_OK);
+            return response($this->placesRepository->getByUserId($user_id), Response::HTTP_OK);
         } catch (Exception $e) {
             return response("Ocurrió un error al intentar obtener lugares por user_id.", Response::HTTP_FORBIDDEN);
         }
@@ -96,7 +97,7 @@ class PlacesController extends BaseController
     public function getById($id)
     {
         try {
-            return response($this->placesRepository->getById($id, $this->getAuthenticatedUser()->id), Response::HTTP_OK);
+            return response($this->placesRepository->getById($id), Response::HTTP_OK);
         } catch (Exception $e) {
             return response("Ocurrió un error al obtener el lugar por su id.", Response::HTTP_FORBIDDEN);
         }

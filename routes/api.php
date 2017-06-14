@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 Route::group(['prefix' => 'users'], function () {
     Route::post('/login', 'Business\UsersController@login');
-    //Route::get('/test', 'Business\UsersController@test');
+    Route::get('/test', 'Business\UsersController@test');
 });
 
 Route::group(['prefix' => 'hashtags'], function () {
