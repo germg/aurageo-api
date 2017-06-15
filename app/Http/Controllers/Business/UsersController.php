@@ -63,7 +63,7 @@ class UsersController extends Controller
                 $res = $this->usersRepository->create($data);
                 return response($res->id, Response::HTTP_OK);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al crear el usuario.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -79,7 +79,7 @@ class UsersController extends Controller
         try {
             $this->usersRepository->delete($id);
             return response(Response::HTTP_OK);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al eliminar el usuario.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -117,7 +117,7 @@ class UsersController extends Controller
             } else {
                 return response("No se pudo verificar el token de Google.", Response::HTTP_FORBIDDEN);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al autenticar el usuario.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -130,15 +130,17 @@ class UsersController extends Controller
      */
     public function logout(Request $request)
     {
-        $data = (object)$request->all();
-        $t = $token = JWTAuth::getToken($data->token);
-        if (isset($t) && !empty($t->value)) {
-            JWTAuth::setToken($t)->invalidate();
+        try {
+            JWTAuth::parseToken()->invalidate();
+            return response(Response::HTTP_OK);
         }
-        return response(Response::HTTP_OK);
+        catch (\Exception $e) {
+            return response("Ocurrió un error al cerrar la sesión.", Response::HTTP_FORBIDDEN);
+        }
     }
 
-    public function test(){
+    public function test()
+    {
 
         $user = $this->usersRepository->getById(5);
 

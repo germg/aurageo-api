@@ -48,7 +48,7 @@ class CardsController extends Controller
     {
         try {
             return response($this->cardsRepository->getById($id), Response::HTTP_OK);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al obtener la tarjeta por su id.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -63,7 +63,7 @@ class CardsController extends Controller
     {
         try {
             return response($this->cardsRepository->getByPlaceId($id), Response::HTTP_OK);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al obtener las tarjetas por place_id.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -91,7 +91,7 @@ class CardsController extends Controller
                 $res = $this->cardsRepository->create($data);
                 return response($res->id, Response::HTTP_OK);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al crear la tarjeta.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -119,7 +119,7 @@ class CardsController extends Controller
                 $res = $this->cardsRepository->edit($data);
                 return response(Response::HTTP_OK);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al editar la tarjeta.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -135,7 +135,7 @@ class CardsController extends Controller
         try {
             $res = $this->cardsRepository->delete($id);
             return response(Response::HTTP_OK);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al eliminar la tarjeta.", Response::HTTP_FORBIDDEN);
         }
     }

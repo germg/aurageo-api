@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Business;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\PlacesRepository as PlacesRepository;
 use Mockery\CountValidator\Exception;
@@ -54,7 +55,7 @@ class PlacesController extends Controller
     {
         try {
             return response($this->placesRepository->getBookmarkedByUserId($user_id), Response::HTTP_OK);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al intentar obtener lugares marcados como favorito por user_id.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -69,7 +70,7 @@ class PlacesController extends Controller
     {
         try {
             return response($this->placesRepository->getPlacesNearToCoordinate($latitude, $longitude), Response::HTTP_OK);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al intentar obtener lugares cercanos a una coordenada.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -83,7 +84,7 @@ class PlacesController extends Controller
     {
         try {
             return response($this->placesRepository->getByUserId($user_id), Response::HTTP_OK);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al intentar obtener lugares por user_id.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -98,7 +99,9 @@ class PlacesController extends Controller
     {
         try {
             return response($this->placesRepository->getById($id), Response::HTTP_OK);
-        } catch (Exception $e) {
+        }
+        catch (\Exception $e) {
+            //Log::error('Something is really going wrong.');
             return response("Ocurrió un error al obtener el lugar por su id.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -125,7 +128,7 @@ class PlacesController extends Controller
                 $res = $this->placesRepository->create($data);
                 return response($res->id, Response::HTTP_OK);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al crear el lugar.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -153,7 +156,7 @@ class PlacesController extends Controller
                 $res = $this->placesRepository->edit($data);
                 return response(Response::HTTP_OK);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al editar el lugar.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -169,7 +172,7 @@ class PlacesController extends Controller
         try {
             $res = $this->placesRepository->delete($id);
             return response(Response::HTTP_OK);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al eliminar el lugar.", Response::HTTP_FORBIDDEN);
         }
     }

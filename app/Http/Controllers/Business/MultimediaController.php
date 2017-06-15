@@ -83,7 +83,7 @@ class MultimediaController extends Controller
 
 
             return response("No se ha encontrado la imagen para guardar.", Response::HTTP_FORBIDDEN);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al subir la imagen del lugar.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -134,7 +134,7 @@ class MultimediaController extends Controller
                 return response(env('APP_URL') . $newName, Response::HTTP_OK);
             }
             return response("No se ha encontrado la imagen para guardar.", Response::HTTP_FORBIDDEN);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al subir la imagen de la propiedad.", Response::HTTP_FORBIDDEN);
         }
     }

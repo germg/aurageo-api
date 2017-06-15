@@ -60,7 +60,7 @@ class BookmarksController extends Controller
                 $res = $this->bookmarksRepository->create($user_id, $place_id);
                 return response($res->id, Response::HTTP_OK);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al crear el bookmark.", Response::HTTP_FORBIDDEN);
         }
     }
@@ -83,7 +83,7 @@ class BookmarksController extends Controller
                 $res = $this->bookmarksRepository->delete($user_id, $place_id);
                 return response(Response::HTTP_OK);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response("Ocurrió un error al eliminar el bookmark.", Response::HTTP_FORBIDDEN);
         }
     }

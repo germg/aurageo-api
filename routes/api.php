@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 Route::group(['prefix' => 'users'], function () {
     Route::post('/login', 'Business\UsersController@login');
-    Route::post('/logout', 'Business\UsersController@logout');
+    Route::get('/logout', 'Business\UsersController@logout');
     Route::get('/test', 'Business\UsersController@test');
 });
 
