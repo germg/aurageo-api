@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Business;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 use App\Repositories\BookmarksRepository as BookmarksRepository;
-use Mockery\CountValidator\Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class BookmarksController extends Controller
+class BookmarksController extends BaseController
 {
     private $bookmarksRepository;
 
@@ -18,6 +17,7 @@ class BookmarksController extends Controller
      */
     public function __construct(BookmarksRepository $bookmarksRepository)
     {
+        parent::__construct();
         $this->bookmarksRepository = $bookmarksRepository;
     }
 
@@ -61,7 +61,9 @@ class BookmarksController extends Controller
                 return response($res->id, Response::HTTP_OK);
             }
         } catch (\Exception $e) {
-            return response("Ocurrió un error al crear el bookmark.", Response::HTTP_FORBIDDEN);
+            $msg = "Ocurrió un error al crear el bookmark.";
+            Log::error($msg . " Error: " . $e);
+            return response($msg, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -77,14 +79,21 @@ class BookmarksController extends Controller
         try {
             $data = array('user_id' => $user_id, 'place_id' => $place_id);
             $validator = $this->validator($data);
+
             if ($validator->fails()) {
                 return response($validator->messages(), Response::HTTP_FORBIDDEN);
-            } else {
-                $res = $this->bookmarksRepository->delete($user_id, $place_id);
-                return response(Response::HTTP_OK);
             }
+
+            if(!$this->canPerformAction($user_id)){
+                return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+            }
+
+            $res = $this->bookmarksRepository->delete($user_id, $place_id);
+            return response(Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response("Ocurrió un error al eliminar el bookmark.", Response::HTTP_FORBIDDEN);
+            $msg = "Ocurrió un error al eliminar el bookmark.";
+            Log::error($msg . " Error: " . $e);
+            return response($msg, Response::HTTP_FORBIDDEN);
         }
     }
 }

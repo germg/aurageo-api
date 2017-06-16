@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Business;
 
 use App\Http\Controllers\Controller;
-use App\Models\Users;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\UsersRepository as UsersRepository;
-use Mockery\CountValidator\Exception;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
@@ -64,7 +63,9 @@ class UsersController extends Controller
                 return response($res->id, Response::HTTP_OK);
             }
         } catch (\Exception $e) {
-            return response("Ocurrió un error al crear el usuario.", Response::HTTP_FORBIDDEN);
+            $msg = "Ocurrió un error al crear el usuario.";
+            Log::error($msg . " Error: " . $e);
+            return response($msg, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -80,7 +81,9 @@ class UsersController extends Controller
             $this->usersRepository->delete($id);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response("Ocurrió un error al eliminar el usuario.", Response::HTTP_FORBIDDEN);
+            $msg = "Ocurrió un error al eliminar el usuario.";
+            Log::error($msg . " Error: " . $e);
+            return response($msg, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -100,6 +103,7 @@ class UsersController extends Controller
             if (isset($payload->sub)) {
                 $user = $this->usersRepository->getByGoogleId($payload->sub);
 
+                // Si no esta en la bd se crea
                 if (!$user) {
                     $user = $this->usersRepository->create($payload);
                 }
@@ -107,7 +111,9 @@ class UsersController extends Controller
                 try {
                     $token = JWTAuth::fromUser($user, array(date("Y/m/d h:i:s")));
                 } catch (JWTException $e) {
-                    return response('No se pudo crear el token.', Response::HTTP_FORBIDDEN);
+                    $msg = 'No se pudo crear el token.';
+                    Log::error($msg . " Error: " . $e);
+                    return response($msg, Response::HTTP_FORBIDDEN);
                 }
 
                 $auth = compact('token');
@@ -118,7 +124,9 @@ class UsersController extends Controller
                 return response("No se pudo verificar el token de Google.", Response::HTTP_FORBIDDEN);
             }
         } catch (\Exception $e) {
-            return response("Ocurrió un error al autenticar el usuario.", Response::HTTP_FORBIDDEN);
+            $msg = "Ocurrió un error al autenticar el usuario.";
+            Log::error($msg . " Error: " . $e);
+            return response($msg, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -135,13 +143,14 @@ class UsersController extends Controller
             return response(Response::HTTP_OK);
         }
         catch (\Exception $e) {
-            return response("Ocurrió un error al cerrar la sesión.", Response::HTTP_FORBIDDEN);
+            $msg = "Ocurrió un error al cerrar la sesión.";
+            Log::error($msg . " Error: " . $e);
+            return response($msg, Response::HTTP_FORBIDDEN);
         }
     }
 
     public function test()
     {
-
         $user = $this->usersRepository->getById(5);
 
         try {

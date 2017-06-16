@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Business;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\PlacesRepository as PlacesRepository;
-use Mockery\CountValidator\Exception;
 
-class PlacesController extends Controller
+class PlacesController extends BaseController
 {
     /**
      * Repositorio lugares.
@@ -24,6 +22,7 @@ class PlacesController extends Controller
      */
     public function __construct(PlacesRepository $placesRepository)
     {
+        parent::__construct();
         $this->placesRepository = $placesRepository;
     }
 
@@ -99,10 +98,10 @@ class PlacesController extends Controller
     {
         try {
             return response($this->placesRepository->getById($id), Response::HTTP_OK);
-        }
-        catch (\Exception $e) {
-            //Log::error('Something is really going wrong.');
-            return response("Ocurrió un error al obtener el lugar por su id.", Response::HTTP_FORBIDDEN);
+        } catch (\Exception $e) {
+            $msg = "Ocurrió un error al obtener el lugar por su id.";
+            Log::error($msg . " Error: " . $e);
+            return response($msg, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -129,7 +128,9 @@ class PlacesController extends Controller
                 return response($res->id, Response::HTTP_OK);
             }
         } catch (\Exception $e) {
-            return response("Ocurrió un error al crear el lugar.", Response::HTTP_FORBIDDEN);
+            $msg = "Ocurrió un error al crear el lugar.";
+            Log::error($msg . " Error: " . $e);
+            return response($msg, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -150,14 +151,22 @@ class PlacesController extends Controller
         try {
             if ($validator->fails()) {
                 return response($validator->messages(), Response::HTTP_FORBIDDEN);
-            } else {
-                // Transformo el array de datos a objeto (para hacer flechita)
-                $data = (object)$data;
-                $res = $this->placesRepository->edit($data);
-                return response(Response::HTTP_OK);
             }
+
+            // Transformo el array de datos a objeto (para hacer flechita)
+            $data = (object)$data;
+
+            if(!$this->canPerformAction($data->userId)){
+                return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+            }
+
+            $res = $this->placesRepository->edit($data);
+            return response(Response::HTTP_OK);
+
         } catch (\Exception $e) {
-            return response("Ocurrió un error al editar el lugar.", Response::HTTP_FORBIDDEN);
+            $msg = "Ocurrió un error al editar el lugar.";
+            Log::error($msg . " Error: " . $e);
+            return response($msg, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -170,10 +179,19 @@ class PlacesController extends Controller
     public function delete($id)
     {
         try {
+
+            $place = $this->placesRepository->getById($id);
+
+            if(!$this->canPerformAction($place->userId)){
+                return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+            }
+
             $res = $this->placesRepository->delete($id);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response("Ocurrió un error al eliminar el lugar.", Response::HTTP_FORBIDDEN);
+            $msg = "Ocurrió un error al eliminar el lugar.";
+            Log::error($msg . " Error: " . $e);
+            return response($msg, Response::HTTP_FORBIDDEN);
         }
     }
 }
