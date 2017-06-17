@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Business;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\HashtagsRepository as HashtagsRepository;
-use Mockery\CountValidator\Exception;
 
-class HashtagsController extends Controller
+class HashtagsController extends BaseController
 {
     /**
      * Repositorio hashtags.
@@ -23,6 +22,7 @@ class HashtagsController extends Controller
      */
     public function __construct(HashtagsRepository $hashtagsRepository)
     {
+        parent::__construct();
         $this->hashtagsRepository = $hashtagsRepository;
     }
 
@@ -49,7 +49,9 @@ class HashtagsController extends Controller
         try {
             return response($this->hashtagsRepository->getById($id), Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response("Ocurrió un error al obtener el hashtag por su id.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al obtener el hashtag por su id.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -64,7 +66,9 @@ class HashtagsController extends Controller
         try {
             return response($this->hashtagsRepository->getByPlaceId($place_id), Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response("Ocurrió un error al obtener las tarjetas por place_id.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al obtener las tarjetas por place_id.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -92,7 +96,9 @@ class HashtagsController extends Controller
                 return response($res->id, Response::HTTP_OK);
             }
         } catch (\Exception $e) {
-            return response("Ocurrió un error al crear el hashtag.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al crear el hashtag.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -120,7 +126,9 @@ class HashtagsController extends Controller
                 return response(Response::HTTP_OK);
             }
         } catch (\Exception $e) {
-            return response("Ocurrió un error al editar el hastag.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al editar el hastag.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -136,7 +144,9 @@ class HashtagsController extends Controller
             $res = $this->hashtagsRepository->delete($id);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response("Ocurrió un error al eliminar el hashtag.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al eliminar el hashtag.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 }

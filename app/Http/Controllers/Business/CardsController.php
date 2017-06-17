@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Business;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\CardsRepository as CardsRepository;
-use Mockery\CountValidator\Exception;
 
-class CardsController extends Controller
+class CardsController extends BaseController
 {
     /**
      * Repositorio usuarios.
@@ -23,6 +22,7 @@ class CardsController extends Controller
      */
     public function __construct(CardsRepository $cardsRepository)
     {
+        parent::__construct();
         $this->cardsRepository = $cardsRepository;
     }
 
@@ -49,7 +49,9 @@ class CardsController extends Controller
         try {
             return response($this->cardsRepository->getById($id), Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response("Ocurrió un error al obtener la tarjeta por su id.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al obtener la tarjeta por su id.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -64,7 +66,9 @@ class CardsController extends Controller
         try {
             return response($this->cardsRepository->getByPlaceId($id), Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response("Ocurrió un error al obtener las tarjetas por place_id.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al obtener las tarjetas por place_id.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -92,7 +96,9 @@ class CardsController extends Controller
                 return response($res->id, Response::HTTP_OK);
             }
         } catch (\Exception $e) {
-            return response("Ocurrió un error al crear la tarjeta.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al crear la tarjeta.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -120,7 +126,9 @@ class CardsController extends Controller
                 return response(Response::HTTP_OK);
             }
         } catch (\Exception $e) {
-            return response("Ocurrió un error al editar la tarjeta.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al editar la tarjeta.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -136,7 +144,9 @@ class CardsController extends Controller
             $res = $this->cardsRepository->delete($id);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response("Ocurrió un error al eliminar la tarjeta.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al eliminar la tarjeta.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 }

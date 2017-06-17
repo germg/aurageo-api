@@ -55,7 +55,9 @@ class PlacesController extends BaseController
         try {
             return response($this->placesRepository->getBookmarkedByUserId($user_id), Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response("Ocurrió un error al intentar obtener lugares marcados como favorito por user_id.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al intentar obtener lugares marcados como favorito por user_id.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -70,7 +72,9 @@ class PlacesController extends BaseController
         try {
             return response($this->placesRepository->getPlacesNearToCoordinate($latitude, $longitude), Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response("Ocurrió un error al intentar obtener lugares cercanos a una coordenada.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al intentar obtener lugares cercanos a una coordenada.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -84,7 +88,9 @@ class PlacesController extends BaseController
         try {
             return response($this->placesRepository->getByUserId($user_id), Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response("Ocurrió un error al intentar obtener lugares por user_id.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al intentar obtener lugares por user_id.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -99,9 +105,9 @@ class PlacesController extends BaseController
         try {
             return response($this->placesRepository->getById($id), Response::HTTP_OK);
         } catch (\Exception $e) {
-            $msg = "Ocurrió un error al obtener el lugar por su id.";
-            Log::error($msg . " Error: " . $e);
-            return response($msg, Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al obtener el lugar por su id.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -128,9 +134,9 @@ class PlacesController extends BaseController
                 return response($res->id, Response::HTTP_OK);
             }
         } catch (\Exception $e) {
-            $msg = "Ocurrió un error al crear el lugar.";
-            Log::error($msg . " Error: " . $e);
-            return response($msg, Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al crear el lugar.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -164,9 +170,9 @@ class PlacesController extends BaseController
             return response(Response::HTTP_OK);
 
         } catch (\Exception $e) {
-            $msg = "Ocurrió un error al editar el lugar.";
-            Log::error($msg . " Error: " . $e);
-            return response($msg, Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al editar el lugar.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -189,9 +195,9 @@ class PlacesController extends BaseController
             $res = $this->placesRepository->delete($id);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
-            $msg = "Ocurrió un error al eliminar el lugar.";
-            Log::error($msg . " Error: " . $e);
-            return response($msg, Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al eliminar el lugar.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 }

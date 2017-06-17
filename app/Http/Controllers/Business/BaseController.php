@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 class BaseController extends Controller
 {
     protected $currentUser;
+    protected $message;
 
     /**
      * Constructor de la clase

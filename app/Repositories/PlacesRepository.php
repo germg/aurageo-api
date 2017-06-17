@@ -191,6 +191,8 @@ class PlacesRepository
      */
     public function edit($data)
     {
+        $avatar_url = substr($data->avatarUrl, strpos($data->avatarUrl, self::UPLOADS_FOLDER));
+        
         return Places::where('id', '=', $data->id)
             ->update([
                 'name' => $data->name,

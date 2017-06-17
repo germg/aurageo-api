@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Business;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -11,7 +10,7 @@ use App\Repositories\UsersRepository as UsersRepository;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
-class UsersController extends Controller
+class UsersController extends BaseController
 {
     /**
      * Repositorio usuarios.
@@ -25,6 +24,7 @@ class UsersController extends Controller
      */
     public function __construct(UsersRepository $usersRepository)
     {
+        parent::__construct();
         $this->usersRepository = $usersRepository;
     }
 
@@ -63,9 +63,9 @@ class UsersController extends Controller
                 return response($res->id, Response::HTTP_OK);
             }
         } catch (\Exception $e) {
-            $msg = "Ocurrió un error al crear el usuario.";
-            Log::error($msg . " Error: " . $e);
-            return response($msg, Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al crear el usuario.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -81,9 +81,9 @@ class UsersController extends Controller
             $this->usersRepository->delete($id);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
-            $msg = "Ocurrió un error al eliminar el usuario.";
-            Log::error($msg . " Error: " . $e);
-            return response($msg, Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al eliminar el usuario.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -124,9 +124,9 @@ class UsersController extends Controller
                 return response("No se pudo verificar el token de Google.", Response::HTTP_FORBIDDEN);
             }
         } catch (\Exception $e) {
-            $msg = "Ocurrió un error al autenticar el usuario.";
-            Log::error($msg . " Error: " . $e);
-            return response($msg, Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al autenticar el usuario.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -143,9 +143,9 @@ class UsersController extends Controller
             return response(Response::HTTP_OK);
         }
         catch (\Exception $e) {
-            $msg = "Ocurrió un error al cerrar la sesión.";
-            Log::error($msg . " Error: " . $e);
-            return response($msg, Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al cerrar la sesión.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 

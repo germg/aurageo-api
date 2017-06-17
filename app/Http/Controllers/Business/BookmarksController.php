@@ -61,9 +61,9 @@ class BookmarksController extends BaseController
                 return response($res->id, Response::HTTP_OK);
             }
         } catch (\Exception $e) {
-            $msg = "Ocurrió un error al crear el bookmark.";
-            Log::error($msg . " Error: " . $e);
-            return response($msg, Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al crear el bookmark.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -91,9 +91,9 @@ class BookmarksController extends BaseController
             $res = $this->bookmarksRepository->delete($user_id, $place_id);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
-            $msg = "Ocurrió un error al eliminar el bookmark.";
-            Log::error($msg . " Error: " . $e);
-            return response($msg, Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al eliminar el bookmark.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 }

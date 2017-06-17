@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Business;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 use App\Repositories\PlacesRepository as PlacesRepository;
 use App\Repositories\CardsRepository as CardsRepository;
-use Mockery\CountValidator\Exception;
+use Illuminate\Support\Facades\Log;
 use DateTime;
 
-class MultimediaController extends Controller
+class MultimediaController extends BaseController
 {
     private $basePath;
     private $placesRepository;
@@ -22,6 +21,7 @@ class MultimediaController extends Controller
      */
     public function __construct(PlacesRepository $placesRepository, CardsRepository $cardsRepository)
     {
+        parent::__construct();
         $this->basePath = env('URL_UPLOADS');
         $this->placesRepository = $placesRepository;
         $this->cardsRepository = $cardsRepository;
@@ -81,10 +81,11 @@ class MultimediaController extends Controller
                 return response(env('APP_URL') . $newName, Response::HTTP_OK);
             }
 
-
             return response("No se ha encontrado la imagen para guardar.", Response::HTTP_FORBIDDEN);
         } catch (\Exception $e) {
-            return response("Ocurrió un error al subir la imagen del lugar.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al subir la imagen del lugar.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -135,7 +136,9 @@ class MultimediaController extends Controller
             }
             return response("No se ha encontrado la imagen para guardar.", Response::HTTP_FORBIDDEN);
         } catch (\Exception $e) {
-            return response("Ocurrió un error al subir la imagen de la propiedad.", Response::HTTP_FORBIDDEN);
+            $this->message = "Ocurrió un error al subir la imagen de la propiedad.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
         }
     }
 }
