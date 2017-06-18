@@ -36,8 +36,7 @@ class MultimediaController extends BaseController
     public function uploadPlaceAvatar($id)
     {
         try {
-
-            if (isset($id) && $id !== 0) {
+            if (isset($id) && intval($id) !== 0) {
                 $place = $this->placesRepository->getById($id);
 
                 if (!$this->canPerformAction($place->userId)) {
@@ -98,7 +97,7 @@ class MultimediaController extends BaseController
     {
         try {
 
-            if (isset($id) && $id !== 0) {
+            if (isset($id) && intval($id) !== 0) {
                 $place = $this->placesRepository->getByCardId($id);
 
                 if (!$this->canPerformAction($place->userId)) {
