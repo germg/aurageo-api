@@ -160,6 +160,31 @@ class PlacesRepository
         return $place;
     }
 
+
+    /**
+     * Obtiene un lugar por el id de tarjeta
+     *
+     * @param $card_id
+     * @return mixed
+     */
+    public function getByCardId($card_id){
+        return Places::join('cards', 'cards.place_id', 'id')
+            ->where('card.id', $card_id)
+            ->first();
+    }
+
+    /**
+     * Obtiene un lugar po id de hashtag
+     *
+     * @param $hashtag_id
+     * @return mixed
+     */
+    public function getByHashtagId($hashtag_id){
+        return Places::join('hashtags', 'hashtag.place_id', 'id')
+            ->where('hashtag.id', $hashtag_id)
+            ->first();
+    }
+
     /**
      * Crea un lugar
      *
@@ -192,7 +217,7 @@ class PlacesRepository
     public function edit($data)
     {
         $avatar_url = substr($data->avatarUrl, strpos($data->avatarUrl, self::UPLOADS_FOLDER));
-        
+
         return Places::where('id', '=', $data->id)
             ->update([
                 'name' => $data->name,

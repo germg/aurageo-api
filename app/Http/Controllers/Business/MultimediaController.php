@@ -36,6 +36,23 @@ class MultimediaController extends BaseController
     public function uploadPlaceAvatar($id)
     {
         try {
+
+            if (isset($id) && $id !== 0) {
+                $place = $this->placesRepository->getById($id);
+
+                if (!$this->canPerformAction($place->userId)) {
+                    return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+                }
+
+                // Se elimina fisicamente la imagen anterior si tiene y existe
+                if (isset($place->avatarUrl) && !empty($place->avatarUrl)) {
+                    $path = $this->basePath . $place->avatarUrl;
+                    if (file_exists($path)) {
+                        unlink($path);
+                    }
+                }
+            }
+
             if (!empty($_FILES)) {
 
                 $uploadFolder = '/uploads/places/';
@@ -44,18 +61,6 @@ class MultimediaController extends BaseController
                 // Si no existe la carpeta del lugar se crea
                 if (!file_exists($fullPath)) {
                     mkdir($fullPath, 0775, true);
-                }
-
-                if (isset($id) && $id !== 0) {
-                    $place = $this->placesRepository->getById($id);
-
-                    // Se elimina fisicamente la imagen anterior si tiene y existe
-                    if (isset($place->avatarUrl) && !empty($place->avatarUrl)) {
-                        $path = $this->basePath . $place->avatarUrl;
-                        if (file_exists($path)) {
-                            unlink($path);
-                        }
-                    }
                 }
 
                 $fileName = array_values($_FILES)[0]['name'];
@@ -92,6 +97,25 @@ class MultimediaController extends BaseController
     public function uploadCardImage($id)
     {
         try {
+
+            if (isset($id) && $id !== 0) {
+                $place = $this->placesRepository->getByCardId($id);
+
+                if (!$this->canPerformAction($place->userId)) {
+                    return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+                }
+
+                $card = $this->cardsRepository->getById($id);
+
+                // Se elimina fisicamente la imagen anterior si tiene y existe
+                if (isset($card->imageUrl) && !empty($card->imageUrl)) {
+                    $path = $this->basePath . $card->imageUrl;
+                    if (file_exists($path)) {
+                        unlink($path);
+                    }
+                }
+            }
+
             if (!empty($_FILES)) {
                 $uploadFolder = '/uploads/cards/';
                 $fullPath = $this->basePath . $uploadFolder;
@@ -99,18 +123,6 @@ class MultimediaController extends BaseController
                 // Si no existe la carpeta se crea
                 if (!file_exists($fullPath)) {
                     mkdir($fullPath, 0775, true);
-                }
-
-                if (isset($id) && $id !== 0) {
-                    $card = $this->cardsRepository->getById($id);
-
-                    // Se elimina fisicamente la imagen anterior si tiene y existe
-                    if (isset($card->imageUrl) && !empty($card->imageUrl)) {
-                        $path = $this->basePath . $card->imageUrl;
-                        if (file_exists($path)) {
-                            unlink($path);
-                        }
-                    }
                 }
 
                 $fileName = array_values($_FILES)[0]['name'];

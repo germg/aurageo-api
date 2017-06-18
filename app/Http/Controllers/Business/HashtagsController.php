@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\HashtagsRepository as HashtagsRepository;
+use App\Repositories\PlacesRepository as PlacesRepository;
 
 class HashtagsController extends BaseController
 {
@@ -14,16 +15,18 @@ class HashtagsController extends BaseController
      * Repositorio hashtags.
      */
     private $hashtagsRepository;
+    private $placesRepository;
 
     /**
      * Constructor de HashtagsController.
      *
      * @param $cardsRepository $repository
      */
-    public function __construct(HashtagsRepository $hashtagsRepository)
+    public function __construct(HashtagsRepository $hashtagsRepository, PlacesRepository $placesRepository)
     {
         parent::__construct();
         $this->hashtagsRepository = $hashtagsRepository;
+        $this->placesRepository = $placesRepository;
     }
 
     /**
@@ -119,12 +122,19 @@ class HashtagsController extends BaseController
         try {
             if ($validator->fails()) {
                 return response($validator->messages(), Response::HTTP_FORBIDDEN);
-            } else {
-                // Transformo el array de datos a objeto (para hacer flechita)
-                $data = (object)$data;
-                $res = $this->hashtagsRepository->edit($data);
-                return response(Response::HTTP_OK);
             }
+
+            // Transformo el array de datos a objeto (para hacer flechita)
+            $data = (object)$data;
+
+            $place = $this->placesRepository->getById($data->placeId);
+
+            if (!$this->canPerformAction($place->userId)) {
+                return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+            }
+
+            $res = $this->hashtagsRepository->edit($data);
+            return response(Response::HTTP_OK);
         } catch (\Exception $e) {
             $this->message = "Ocurrió un error al editar el hastag.";
             Log::error($this->message . " Error: " . $e);
@@ -141,6 +151,13 @@ class HashtagsController extends BaseController
     public function delete($id)
     {
         try {
+
+            $place = $this->placesRepository->getByHashtagId($id);
+
+            if (!$this->canPerformAction($place->userId)) {
+                return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+            }
+
             $res = $this->hashtagsRepository->delete($id);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {

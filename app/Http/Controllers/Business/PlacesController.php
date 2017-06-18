@@ -127,12 +127,12 @@ class PlacesController extends BaseController
         try {
             if ($validator->fails()) {
                 return response($validator->messages(), Response::HTTP_FORBIDDEN);
-            } else {
-                // Transformo el array de datos a objeto (para hacer flechita)
-                $data = (object)$data;
-                $res = $this->placesRepository->create($data);
-                return response($res->id, Response::HTTP_OK);
             }
+
+            // Transformo el array de datos a objeto (para hacer flechita)
+            $data = (object)$data;
+            $res = $this->placesRepository->create($data);
+            return response($res->id, Response::HTTP_OK);
         } catch (\Exception $e) {
             $this->message = "Ocurrió un error al crear el lugar.";
             Log::error($this->message . " Error: " . $e);
@@ -162,7 +162,7 @@ class PlacesController extends BaseController
             // Transformo el array de datos a objeto (para hacer flechita)
             $data = (object)$data;
 
-            if(!$this->canPerformAction($data->userId)){
+            if (!$this->canPerformAction($data->userId)) {
                 return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
             }
 
@@ -188,7 +188,7 @@ class PlacesController extends BaseController
 
             $place = $this->placesRepository->getById($id);
 
-            if(!$this->canPerformAction($place->userId)){
+            if (!$this->canPerformAction($place->userId)) {
                 return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
             }
 

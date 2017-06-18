@@ -108,6 +108,8 @@ class UsersController extends BaseController
                     $user = $this->usersRepository->create($payload);
                 }
 
+                $user->gtoken = $data->token;
+
                 try {
                     $token = JWTAuth::fromUser($user, array(date("Y/m/d h:i:s")));
                 } catch (JWTException $e) {

@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\CardsRepository as CardsRepository;
+use App\Repositories\PlacesRepository as PlacesRepository;
 
 class CardsController extends BaseController
 {
@@ -14,16 +15,18 @@ class CardsController extends BaseController
      * Repositorio usuarios.
      */
     private $cardsRepository;
+    private $placesRepository;
 
     /**
      * Constructor de CardsController.
      *
      * @param $cardsRepository $repository
      */
-    public function __construct(CardsRepository $cardsRepository)
+    public function __construct(CardsRepository $cardsRepository, PlacesRepository $placesRepository)
     {
         parent::__construct();
         $this->cardsRepository = $cardsRepository;
+        $this->placesRepository = $placesRepository;
     }
 
     /**
@@ -87,14 +90,14 @@ class CardsController extends BaseController
         $validator = $this->validator($data);
 
         try {
+            
             if ($validator->fails()) {
                 return response($validator->messages(), Response::HTTP_FORBIDDEN);
-            } else {
-                // Transformo el array de datos a objeto (para hacer flechita)
-                $data = (object)$data;
-                $res = $this->cardsRepository->create($data);
-                return response($res->id, Response::HTTP_OK);
             }
+            // Transformo el array de datos a objeto (para hacer flechita)
+            $data = (object)$data;
+            $res = $this->cardsRepository->create($data);
+            return response($res->id, Response::HTTP_OK);
         } catch (\Exception $e) {
             $this->message = "Ocurrió un error al crear la tarjeta.";
             Log::error($this->message . " Error: " . $e);
@@ -119,12 +122,19 @@ class CardsController extends BaseController
         try {
             if ($validator->fails()) {
                 return response($validator->messages(), Response::HTTP_FORBIDDEN);
-            } else {
-                // Transformo el array de datos a objeto (para hacer flechita)
-                $data = (object)$data;
-                $res = $this->cardsRepository->edit($data);
-                return response(Response::HTTP_OK);
             }
+            // Transformo el array de datos a objeto (para hacer flechita)
+            $data = (object)$data;
+
+            $place = $this->placesRepository->getById($data->place_id);
+
+            if (!$this->canPerformAction($place->userId)) {
+                return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+            }
+
+            $res = $this->cardsRepository->edit($data);
+            return response(Response::HTTP_OK);
+
         } catch (\Exception $e) {
             $this->message = "Ocurrió un error al editar la tarjeta.";
             Log::error($this->message . " Error: " . $e);
@@ -141,6 +151,13 @@ class CardsController extends BaseController
     public function delete($id)
     {
         try {
+
+            $place = $this->placesRepository->getByCardId($id);
+
+            if (!$this->canPerformAction($place->userId)) {
+                return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+            }
+
             $res = $this->cardsRepository->delete($id);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
