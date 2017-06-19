@@ -30,6 +30,7 @@ Route::group(['prefix' => 'hashtags'], function () {
 
 Route::group(['prefix' => 'cards'], function () {
     Route::get('/place/{id}', 'Business\CardsController@getByPlaceId');
+    Route::get('/place/{id}/offset/{offset}/limit/{limit}', 'Business\CardsController@getByPlaceIdWithOffsetAndLimit');
     Route::put('/create', 'Business\CardsController@create')->middleware('jwt.auth');
     Route::post('/edit', 'Business\CardsController@edit')->middleware('jwt.auth');
     Route::delete('/delete/{id}', 'Business\CardsController@delete')->middleware('jwt.auth');

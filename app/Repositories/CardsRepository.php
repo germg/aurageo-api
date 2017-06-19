@@ -30,6 +30,28 @@ class CardsRepository
     }
 
     /**
+     * Obtiene todas las tarjetas de un lugar con limite y desplazamiento
+     *
+     * @return mixed
+     */
+    public function getByPlaceIdWithOffsetAndLimit($place_id, $offset, $limit)
+    {
+        return Cards::where('place_id', '=', $place_id)
+            ->skip($offset)
+            ->take($limit)
+            ->get([
+                'id',
+                'place_id as placeId',
+                DB::raw('concat("' . env('APP_URL') .'", image_url) as imageUrl'),
+                'description',
+                'created_at as createdAt',
+                'updated_at as updatedAt',
+                'deleted'
+            ])
+            ->first();
+    }
+
+    /**
      * Obtiene una tarjeta por su id
      *
      * @param $id

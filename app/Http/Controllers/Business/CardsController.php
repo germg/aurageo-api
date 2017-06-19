@@ -59,7 +59,7 @@ class CardsController extends BaseController
     }
 
     /**
-     * Obtiene una tarjeta por su place_id
+     * Obtiene tarjetas por su place_id
      *
      * @param $id
      * @return Response
@@ -70,6 +70,25 @@ class CardsController extends BaseController
             return response($this->cardsRepository->getByPlaceId($id), Response::HTTP_OK);
         } catch (\Exception $e) {
             $this->message = "Ocurrió un error al obtener las tarjetas por place_id.";
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
+        }
+    }
+
+    /**
+     * Obtiene tarjetas por su place_id con limite y desplazamiento
+     *
+     * @param $id
+     * @param $offset
+     * @param $limit
+     * @return Response
+     */
+    public function getByPlaceIdWithOffsetAndLimit($id, $offset, $limit)
+    {
+        try {
+            return response($this->cardsRepository->getByPlaceIdWithOffsetAndLimit($id, $offset, $limit), Response::HTTP_OK);
+        } catch (\Exception $e) {
+            $this->message = "Ocurrió un error al obtener las tarjetas por place_id con desplazamiento y limite.";
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
