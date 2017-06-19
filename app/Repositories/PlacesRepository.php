@@ -41,6 +41,7 @@ class PlacesRepository
     private function completeAttributes(&$data)
     {
         if ($data) {
+
             if (is_array($data)) {
                 for ($i = 0; $i < sizeof($data); $i++) {
                     $data[$i]["bookmarked"] = $this->isBookmarked($data[$i]["id"]);
@@ -272,7 +273,9 @@ class PlacesRepository
         ])
             ->orderBy('distance')
             ->havingRaw('distance < ' . env("PLACES_SEARCH_DISTANCE"))
-            ->get()->take(env("LIMIT_SEARCH_DISTANCE"));
+            ->take(env("LIMIT_SEARCH_DISTANCE"))
+            ->get()
+            ->toArray();
 
         $this->completeAttributes($places);
 
