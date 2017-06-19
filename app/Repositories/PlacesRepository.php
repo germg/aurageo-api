@@ -11,13 +11,15 @@ class PlacesRepository
     const UPLOADS_FOLDER = '/uploads';
 
     private $bookmarksRepository;
+    private $hashtagsRepository;
     private $current_user_id;
 
-    public function __construct(BookmarksRepository $bookmarksRepository)
+    public function __construct(BookmarksRepository $bookmarksRepository, HashtagsRepository $hashtagsRepository)
     {
         $this->bookmarksRepository = $bookmarksRepository;
         $currentUser = getAuthenticatedUser();
         $this->current_user_id = isset($currentUser->id) ? $currentUser->id : 0;
+        $this->hashtagsRepository = $hashtagsRepository;
     }
 
     /**
@@ -46,11 +48,13 @@ class PlacesRepository
                 for ($i = 0; $i < sizeof($data); $i++) {
                     $data[$i]["bookmarked"] = $this->isBookmarked($data[$i]["id"]);
                     $data[$i]["owned"] = $data[$i]["userId"] === $this->current_user_id;
+                    $data[$i]["hashtags"] = $this->hashtagsRepository->getByPlaceId($data[$i]["id"]);
                 }
             } else {
                 if (isset($data->id)) {
                     $data->bookmarked = $this->isBookmarked($data->id);
                     $data->owned = $data->userId === $this->current_user_id;
+                    $data->hashtags = $this->hashtagsRepository->getByPlaceId($data->id);
                 }
             }
         }

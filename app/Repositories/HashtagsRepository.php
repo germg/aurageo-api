@@ -15,11 +15,11 @@ class HashtagsRepository
      */
     public function get()
     {
-        return Hashtags::get([
+        return Hashtags::where('deleted', 0)
+            ->get([
             'id',
             'place_id as placeId',
-            'description',
-            'deleted'
+            'description'
         ]);
     }
 
@@ -32,11 +32,11 @@ class HashtagsRepository
     public function getById($id)
     {
         return Hashtags::where('id', '=', $id)
+            ->where('deleted', 0)
             ->get([
                 'id',
                 'place_id as placeId',
-                'description',
-                'deleted'
+                'description'
             ])->first();
     }
 
@@ -49,11 +49,11 @@ class HashtagsRepository
     public function getByPlaceId($place_id)
     {
         return Hashtags::where('place_id', '=', $place_id)
+            ->where('deleted', 0)
             ->get([
                 'id',
                 'place_id as placeId',
-                'description',
-                'deleted'
+                'description'
             ]);
     }
 
