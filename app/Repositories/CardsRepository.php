@@ -17,16 +17,13 @@ class CardsRepository
     public function getByPlaceId($place_id)
     {
         return Cards::where('place_id', '=', $place_id)
+            ->where('deleted', 0)
             ->get([
                 'id',
                 'place_id as placeId',
                 DB::raw('concat("' . env('APP_URL') .'", image_url) as imageUrl'),
-                'description',
-                'created_at as createdAt',
-                'updated_at as updatedAt',
-                'deleted'
-            ])
-            ->first();
+                'description'
+            ]);
     }
 
     /**
@@ -37,18 +34,14 @@ class CardsRepository
     public function getByPlaceIdWithOffsetAndLimit($place_id, $offset, $limit)
     {
         return Cards::where('place_id', '=', $place_id)
+            ->where('deleted', 0)
             ->skip($offset)
             ->take($limit)
             ->get([
                 'id',
-                'place_id as placeId',
                 DB::raw('concat("' . env('APP_URL') .'", image_url) as imageUrl'),
-                'description',
-                'created_at as createdAt',
-                'updated_at as updatedAt',
-                'deleted'
-            ])
-            ->first();
+                'description'
+            ]);
     }
 
     /**
@@ -62,7 +55,6 @@ class CardsRepository
         return Cards::where('id', '=', $id)
             ->get([
                 'id',
-                'place_id as placeId',
                 DB::raw('concat("' . env('APP_URL') .'", image_url) as imageUrl'),
                 'description',
                 'created_at as createdAt',
