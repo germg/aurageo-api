@@ -22,10 +22,9 @@ Route::group(['prefix' => 'users'], function () {
 Route::group(['prefix' => 'hashtags'], function () {
     Route::get('/{id}', 'Business\HashtagsController@getById');
     Route::get('/place/{id}', 'Business\HashtagsController@getByPlaceId');
-    Route::put('/create', 'Business\HashtagsController@create');
-    Route::post('/edit', 'Business\HashtagsController@edit');
-    Route::delete('/delete/{id}', 'Business\HashtagsController@delete');
-    Route::get('/', 'Business\HashtagsController@get_all');
+    Route::put('/create', 'Business\HashtagsController@create')->middleware('jwt.auth');
+    Route::post('/edit', 'Business\HashtagsController@edit')->middleware('jwt.auth');
+    Route::delete('/delete/{id}', 'Business\HashtagsController@delete')->middleware('jwt.auth');
 });
 
 Route::group(['prefix' => 'cards'], function () {
@@ -47,11 +46,11 @@ Route::group(['prefix' => 'places'], function () {
 });
 
 Route::group(['prefix' => 'multimedia'], function () {
-    Route::post('/upload-avatar/{id}', 'Business\MultimediaController@uploadPlaceAvatar');
-    Route::post('/upload-card-image/{id}', 'Business\MultimediaController@uploadCardImage');
+    Route::post('/upload-avatar/{id}', 'Business\MultimediaController@uploadPlaceAvatar')->middleware('jwt.auth');
+    Route::post('/upload-card-image/{id}', 'Business\MultimediaController@uploadCardImage')->middleware('jwt.auth');
 });
 
 Route::group(['prefix' => 'bookmarks'], function () {
-    Route::put('/create/user/{user_id}/place/{place_id}', 'Business\BookmarksController@create');
-    Route::delete('/delete/user/{user_id}/place/{place_id}', 'Business\BookmarksController@delete');
+    Route::put('/create/user/{user_id}/place/{place_id}', 'Business\BookmarksController@create')->middleware('jwt.auth');
+    Route::delete('/delete/user/{user_id}/place/{place_id}', 'Business\BookmarksController@delete')->middleware('jwt.auth');
 });
