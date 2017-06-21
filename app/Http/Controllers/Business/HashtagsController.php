@@ -130,7 +130,7 @@ class HashtagsController extends BaseController
             $place = $this->placesRepository->getById($data->placeId);
 
             if (!$this->canPerformAction($place->userId)) {
-                Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "EDIT Hashtag, USER_ID: $place->userId, CURRENT_USER_ID: " . isset($this->currentUser->id) ? $this->currentUser->id : 0 . ", PLACE_ID: $data->placeId");
+                Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "EDIT Hashtag, USER_ID: $place->userId, CURRENT_USER_ID: " . $this->getCurrentUserId() . ", PLACE_ID: $data->placeId");
                 return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 
@@ -156,7 +156,7 @@ class HashtagsController extends BaseController
             $place = $this->placesRepository->getByHashtagId($id);
 
             if (!$this->canPerformAction($place->userId)) {
-                Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "DELETE Hashtag, USER_ID: $place->userId, CURRENT_USER_ID: " . isset($this->currentUser->id) ? $this->currentUser->id : 0 . ", PLACE_ID: $id");
+                Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "DELETE Hashtag, USER_ID: $place->userId, CURRENT_USER_ID: " . $this->getCurrentUserId() . ", PLACE_ID: $id");
                 return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 

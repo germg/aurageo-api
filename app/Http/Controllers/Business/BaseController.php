@@ -27,4 +27,13 @@ class BaseController extends Controller
     {
         return isset($this->currentUser->id) && intval($user_id) === $this->currentUser->id;
     }
+
+
+    /**
+     * Obtiene el id del usuario en sesión. Si no hay uno devuelve cero.
+     * @return int
+     */
+    public function getCurrentUserId(){
+        return isset($this->currentUser->id) ? $this->currentUser->id : 0;
+    }
 }

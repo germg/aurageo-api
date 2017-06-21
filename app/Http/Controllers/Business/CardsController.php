@@ -148,7 +148,7 @@ class CardsController extends BaseController
             $place = $this->placesRepository->getById($data->place_id);
 
             if (!$this->canPerformAction($place->userId)) {
-                Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "EDIT Place, USER_ID: $place->userId, CURRENT_USER_ID: " . isset($this->currentUser->id) ? $this->currentUser->id : 0 . ", PLACE_ID: $data->place_id");
+                Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "EDIT Place, USER_ID: $place->userId, CURRENT_USER_ID: " . $this->getCurrentUserId() . ", PLACE_ID: $data->place_id");
                 return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 
@@ -175,7 +175,7 @@ class CardsController extends BaseController
             $place = $this->placesRepository->getByCardId($id);
 
             if (!$this->canPerformAction($place->userId)) {
-                Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "DELETE Place, USER_ID: $place->userId, CURRENT_USER_ID: " . isset($this->currentUser->id) ? $this->currentUser->id : 0 . ", PLACE_ID: $id");
+                Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "DELETE Place, USER_ID: $place->userId, CURRENT_USER_ID: " . $this->getCurrentUserId() . ", PLACE_ID: $id");
                 return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 
