@@ -85,6 +85,7 @@ class BookmarksController extends BaseController
             }
 
             if(!$this->canPerformAction($user_id)){
+                Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "DELETE Bookmark, USER_ID: $user_id, PLACE_ID: $place_id");
                 return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 

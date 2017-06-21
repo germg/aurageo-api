@@ -148,6 +148,7 @@ class CardsController extends BaseController
             $place = $this->placesRepository->getById($data->place_id);
 
             if (!$this->canPerformAction($place->userId)) {
+                Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "EDIT Place, USER_ID: $place->userId, PLACE_ID: $data->place_id");
                 return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 
@@ -174,6 +175,7 @@ class CardsController extends BaseController
             $place = $this->placesRepository->getByCardId($id);
 
             if (!$this->canPerformAction($place->userId)) {
+                Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "DELETE Place, USER_ID: $place->userId, PLACE_ID: $id");
                 return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 

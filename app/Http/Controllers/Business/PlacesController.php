@@ -141,8 +141,8 @@ class PlacesController extends BaseController
                 $tag = null;
                 foreach($data->hashtags as $hashtag){
                     $tag = new Hashtags();
-                    $tag->place_id = $res->id;
-                    $tag->description = $hashtag->description;
+                    $tag->placeId = $res->id;
+                    $tag->description = $hashtag["description"];
                     $this->hashtagsRepository->create($tag);
                 }
                 unset($tag);
@@ -179,6 +179,7 @@ class PlacesController extends BaseController
             $data = (object)$data;
 
             if (!$this->canPerformAction($data->userId)) {
+                Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "EDIT Place , USER_ID: $data->userId, PLACE_ID: $data->id");
                 return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 
@@ -186,6 +187,7 @@ class PlacesController extends BaseController
 
             if(isset($data->hashtags)){
                 foreach($data->hashtags as $hashtag){
+                    $hashtag = (object)$hashtag;
                     if(!$hashtag->id || ($hashtag->id && $hashtag->id === null)){
                         $this->hashtagsRepository->create($hashtag);
                     }else if(empty($hashtag->description)){
@@ -218,6 +220,7 @@ class PlacesController extends BaseController
             $place = $this->placesRepository->getById($id);
 
             if (!$this->canPerformAction($place->userId)) {
+                Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "EDIT Place , USER_ID: $place->userId, PLACE_ID: $id");
                 return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 

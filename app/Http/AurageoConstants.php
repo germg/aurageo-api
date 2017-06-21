@@ -41,4 +41,5 @@ class AurageoConstants{
     const USER_LOGOUT_ERROR = "Ocurrió un error al cerrar la sesión.";
 
     const CANNOT_PERFORM_ACTION = "Lo sentimos, no puede realizar esta acción.";
+    const CANNOT_PERFORM_ACTION_LOG = "CANNOT PERFORM ACTION: ";
 }

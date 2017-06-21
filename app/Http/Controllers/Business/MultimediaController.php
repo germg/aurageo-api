@@ -40,6 +40,7 @@ class MultimediaController extends BaseController
                 $place = $this->placesRepository->getById($id);
 
                 if (!$this->canPerformAction($place->userId)) {
+                    Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "DELETE Multimedia Avatar, USER_ID: $place->userId, PLACE_ID: $id");
                     return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
                 }
 
@@ -101,6 +102,7 @@ class MultimediaController extends BaseController
                 $place = $this->placesRepository->getByCardId($id);
 
                 if (!$this->canPerformAction($place->userId)) {
+                    Log::info(\AurageoConstants::CANNOT_PERFORM_ACTION_LOG . "DELETE Multimedia Card, USER_ID: $place->userId, CARD_ID: $id");
                     return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
                 }
 
