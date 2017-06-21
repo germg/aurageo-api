@@ -52,7 +52,7 @@ class CardsController extends BaseController
         try {
             return response($this->cardsRepository->getById($id), Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al obtener la tarjeta por su id.";
+            $this->message = \AurageoConstants::CARD_GET_BY_ID_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -69,7 +69,7 @@ class CardsController extends BaseController
         try {
             return response($this->cardsRepository->getByPlaceId($id), Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al obtener las tarjetas por place_id.";
+            $this->message = \AurageoConstants::CARD_GET_BY_PLACE_ID_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -88,7 +88,7 @@ class CardsController extends BaseController
         try {
             return response($this->cardsRepository->getByPlaceIdWithOffsetAndLimit($id, $offset, $limit), Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al obtener las tarjetas por place_id con desplazamiento y limite.";
+            $this->message = \AurageoConstants::CARD_GET_BY_PLACE_ID_OFFSET_LIMIT_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -109,7 +109,7 @@ class CardsController extends BaseController
         $validator = $this->validator($data);
 
         try {
-            
+
             if ($validator->fails()) {
                 return response($validator->messages(), Response::HTTP_FORBIDDEN);
             }
@@ -118,7 +118,7 @@ class CardsController extends BaseController
             $res = $this->cardsRepository->create($data);
             return response($res->id, Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al crear la tarjeta.";
+            $this->message = \AurageoConstants::CARD_CREATE_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -148,14 +148,14 @@ class CardsController extends BaseController
             $place = $this->placesRepository->getById($data->place_id);
 
             if (!$this->canPerformAction($place->userId)) {
-                return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+                return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 
             $res = $this->cardsRepository->edit($data);
             return response(Response::HTTP_OK);
 
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al editar la tarjeta.";
+            $this->message = \AurageoConstants::CARD_EDIT_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -174,13 +174,13 @@ class CardsController extends BaseController
             $place = $this->placesRepository->getByCardId($id);
 
             if (!$this->canPerformAction($place->userId)) {
-                return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+                return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 
             $res = $this->cardsRepository->delete($id);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al eliminar la tarjeta.";
+            $this->message = \AurageoConstants::CARD_DELETE_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }

@@ -53,7 +53,7 @@ class BookmarksController extends BaseController
                 $bookmark = $this->bookmarksRepository->getByUserIdAndPlaceId($user_id, $place_id);
 
                 if ($bookmark) {
-                    return response("Ya existe un bookmark para el usuario y lugar.", Response::HTTP_FORBIDDEN);
+                    return response(\AurageoConstants::BOOKMARK_EXISTENTE, Response::HTTP_FORBIDDEN);
                 }
 
                 // Transformo el array de datos a objeto (para hacer flechita)
@@ -61,7 +61,7 @@ class BookmarksController extends BaseController
                 return response($res->id, Response::HTTP_OK);
             }
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al crear el bookmark.";
+            $this->message = \AurageoConstants::BOOKMARK_CREATE_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -85,13 +85,13 @@ class BookmarksController extends BaseController
             }
 
             if(!$this->canPerformAction($user_id)){
-                return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+                return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 
             $res = $this->bookmarksRepository->delete($user_id, $place_id);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al eliminar el bookmark.";
+            $this->message = \AurageoConstants::BOOKMARK_DELETE_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }

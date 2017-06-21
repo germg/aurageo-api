@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Business;
 
+use App\Models\Hashtags;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -137,10 +138,14 @@ class PlacesController extends BaseController
             $res = $this->placesRepository->create($data);
 
             if(isset($data->hashtags)){
+                $tag = null;
                 foreach($data->hashtags as $hashtag){
-                    $hashtag->place_id = $res->id;
-                    $this->hashtagsRepository->create($hashtag);
+                    $tag = new Hashtags();
+                    $tag->place_id = $res->id;
+                    $tag->description = $hashtag->description;
+                    $this->hashtagsRepository->create($tag);
                 }
+                unset($tag);
             }
 
             return response($res->id, Response::HTTP_OK);
