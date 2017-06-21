@@ -56,10 +56,7 @@ class CardsRepository
             ->get([
                 'id',
                 DB::raw('concat("' . env('APP_URL') .'", image_url) as imageUrl'),
-                'description',
-                'created_at as createdAt',
-                'updated_at as updatedAt',
-                'deleted'
+                'description'
             ])
             ->first();
     }

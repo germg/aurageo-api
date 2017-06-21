@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\PlacesRepository as PlacesRepository;
+use App\Repositories\HashtagsRepository as HashtagsRepository;
 
 class PlacesController extends BaseController
 {
@@ -14,16 +15,18 @@ class PlacesController extends BaseController
      * Repositorio lugares.
      */
     private $placesRepository;
+    private $hashtagsRepository;
 
     /**
      * Constructor de PlacesController.
      *
      * @param $placesRepository $repository
      */
-    public function __construct(PlacesRepository $placesRepository)
+    public function __construct(PlacesRepository $placesRepository, HashtagsRepository $hashtagsRepository)
     {
         parent::__construct();
         $this->placesRepository = $placesRepository;
+        $this->hashtagsRepository = $hashtagsRepository;
     }
 
     /**
@@ -132,6 +135,14 @@ class PlacesController extends BaseController
             // Transformo el array de datos a objeto (para hacer flechita)
             $data = (object)$data;
             $res = $this->placesRepository->create($data);
+
+            if(isset($data->hashtags)){
+                foreach($data->hashtags as $hashtag){
+                    $hashtag->place_id = $res->id;
+                    $this->hashtagsRepository->create($hashtag);
+                }
+            }
+
             return response($res->id, Response::HTTP_OK);
         } catch (\Exception $e) {
             $this->message = "Ocurrió un error al crear el lugar.";
@@ -167,6 +178,19 @@ class PlacesController extends BaseController
             }
 
             $res = $this->placesRepository->edit($data);
+
+            if(isset($data->hashtags)){
+                foreach($data->hashtags as $hashtag){
+                    if(!$hashtag->id || ($hashtag->id && $hashtag->id === null)){
+                        $this->hashtagsRepository->create($hashtag);
+                    }else if(empty($hashtag->description)){
+                        $this->hashtagsRepository->delete($hashtag->id);
+                    }else{
+                        $this->hashtagsRepository->edit($hashtag);
+                    }
+                }
+            }
+
             return response(Response::HTTP_OK);
 
         } catch (\Exception $e) {
