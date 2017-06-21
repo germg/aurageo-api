@@ -18,6 +18,7 @@ class CardsRepository
     {
         return Cards::where('place_id', '=', $place_id)
             ->where('deleted', 0)
+            ->orderBy('created_at', 'desc')
             ->get([
                 'id',
                 'place_id as placeId',
@@ -35,6 +36,7 @@ class CardsRepository
     {
         return Cards::where('place_id', '=', $place_id)
             ->where('deleted', 0)
+            ->orderBy('created_at', 'desc')
             ->skip($offset)
             ->take($limit)
             ->get([
