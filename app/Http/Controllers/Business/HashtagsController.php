@@ -52,7 +52,7 @@ class HashtagsController extends BaseController
         try {
             return response($this->hashtagsRepository->getById($id), Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al obtener el hashtag por su id.";
+            $this->message = \AurageoConstants::HASHTAG_GET_BY_ID_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -69,7 +69,7 @@ class HashtagsController extends BaseController
         try {
             return response($this->hashtagsRepository->getByPlaceId($place_id), Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al obtener las tarjetas por place_id.";
+            $this->message = \AurageoConstants::HASHTAG_GET_BY_PLACE_ID_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -99,7 +99,7 @@ class HashtagsController extends BaseController
                 return response($res->id, Response::HTTP_OK);
             }
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al crear el hashtag.";
+            $this->message = \AurageoConstants::HASHTAG_CREATE_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -130,13 +130,13 @@ class HashtagsController extends BaseController
             $place = $this->placesRepository->getById($data->placeId);
 
             if (!$this->canPerformAction($place->userId)) {
-                return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+                return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 
             $res = $this->hashtagsRepository->edit($data);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al editar el hastag.";
+            $this->message = \AurageoConstants::HASHTAG_EDIT_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -155,13 +155,13 @@ class HashtagsController extends BaseController
             $place = $this->placesRepository->getByHashtagId($id);
 
             if (!$this->canPerformAction($place->userId)) {
-                return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+                return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 
             $res = $this->hashtagsRepository->delete($id);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al eliminar el hashtag.";
+            $this->message = \AurageoConstants::HASHTAG_DELETE_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }

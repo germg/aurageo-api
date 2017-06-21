@@ -59,7 +59,7 @@ class PlacesController extends BaseController
         try {
             return response($this->placesRepository->getBookmarkedByUserId($user_id), Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al intentar obtener lugares marcados como favorito por user_id.";
+            $this->message = \AurageoConstants::PLACE_GET_BOOKMARKED_BY_USER_ID_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -76,7 +76,7 @@ class PlacesController extends BaseController
         try {
             return response($this->placesRepository->getPlacesNearToCoordinate($latitude, $longitude), Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al intentar obtener lugares cercanos a una coordenada.";
+            $this->message = \AurageoConstants::PLACE_GET_PLACES_NEAR_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -92,7 +92,7 @@ class PlacesController extends BaseController
         try {
             return response($this->placesRepository->getByUserId($user_id), Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al intentar obtener lugares por user_id.";
+            $this->message = \AurageoConstants::PLACE_GET_BY_USER_ID_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -109,7 +109,7 @@ class PlacesController extends BaseController
         try {
             return response($this->placesRepository->getById($id), Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al obtener el lugar por su id.";
+            $this->message = \AurageoConstants::PLACE_GET_BY_ID_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -150,7 +150,7 @@ class PlacesController extends BaseController
 
             return response($res->id, Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al crear el lugar.";
+            $this->message = \AurageoConstants::PLACE_CREATE_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -179,7 +179,7 @@ class PlacesController extends BaseController
             $data = (object)$data;
 
             if (!$this->canPerformAction($data->userId)) {
-                return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+                return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 
             $res = $this->placesRepository->edit($data);
@@ -199,7 +199,7 @@ class PlacesController extends BaseController
             return response(Response::HTTP_OK);
 
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al editar el lugar.";
+            $this->message = \AurageoConstants::PLACE_EDIT_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -218,13 +218,13 @@ class PlacesController extends BaseController
             $place = $this->placesRepository->getById($id);
 
             if (!$this->canPerformAction($place->userId)) {
-                return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+                return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
             }
 
             $res = $this->placesRepository->delete($id);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al eliminar el lugar.";
+            $this->message = \AurageoConstants::PLACE_DELETE_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }

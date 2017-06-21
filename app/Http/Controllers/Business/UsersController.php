@@ -63,7 +63,7 @@ class UsersController extends BaseController
                 return response($res->id, Response::HTTP_OK);
             }
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al crear el usuario.";
+            $this->message = \AurageoConstants::USER_CREATE_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -81,7 +81,7 @@ class UsersController extends BaseController
             $this->usersRepository->delete($id);
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al eliminar el usuario.";
+            $this->message = \AurageoConstants::USER_DELETE_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -113,7 +113,7 @@ class UsersController extends BaseController
                 try {
                     $token = JWTAuth::fromUser($user, array(date("Y/m/d h:i:s")));
                 } catch (JWTException $e) {
-                    $msg = 'No se pudo crear el token.';
+                    $msg = \AurageoConstants::USER_CANNOT_CREATE_TOKEN_ERROR;
                     Log::error($msg . " Error: " . $e);
                     return response($msg, Response::HTTP_FORBIDDEN);
                 }
@@ -123,10 +123,10 @@ class UsersController extends BaseController
 
                 return response($user, Response::HTTP_OK);
             } else {
-                return response("No se pudo verificar el token de Google.", Response::HTTP_FORBIDDEN);
+                return response(\AurageoConstants::USER_CANNOT_VERIFY_GTOKEN_ERROR, Response::HTTP_FORBIDDEN);
             }
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al autenticar el usuario.";
+            $this->message = \AurageoConstants::USER_AUTH_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -145,7 +145,7 @@ class UsersController extends BaseController
             return response(Response::HTTP_OK);
         }
         catch (\Exception $e) {
-            $this->message = "Ocurrió un error al cerrar la sesión.";
+            $this->message = \AurageoConstants::USER_LOGOUT_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }

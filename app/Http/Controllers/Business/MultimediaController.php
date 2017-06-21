@@ -40,7 +40,7 @@ class MultimediaController extends BaseController
                 $place = $this->placesRepository->getById($id);
 
                 if (!$this->canPerformAction($place->userId)) {
-                    return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+                    return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
                 }
 
                 // Se elimina fisicamente la imagen anterior si tiene y existe
@@ -85,9 +85,9 @@ class MultimediaController extends BaseController
                 return response(env('APP_URL') . $newName, Response::HTTP_OK);
             }
 
-            return response("No se ha encontrado la imagen para guardar.", Response::HTTP_FORBIDDEN);
+            return response(\AurageoConstants::MULTIMEDIA_WITHOUT_IMAGE, Response::HTTP_FORBIDDEN);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al subir la imagen del lugar.";
+            $this->message = \AurageoConstants::MULTIMEDIA_UPLOAD_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
@@ -101,7 +101,7 @@ class MultimediaController extends BaseController
                 $place = $this->placesRepository->getByCardId($id);
 
                 if (!$this->canPerformAction($place->userId)) {
-                    return response("Lo sentimos, no puede realizar esta acción.", Response::HTTP_FORBIDDEN);
+                    return response(\AurageoConstants::CANNOT_PERFORM_ACTION, Response::HTTP_FORBIDDEN);
                 }
 
                 $card = $this->cardsRepository->getById($id);
@@ -145,9 +145,9 @@ class MultimediaController extends BaseController
 
                 return response(env('APP_URL') . $newName, Response::HTTP_OK);
             }
-            return response("No se ha encontrado la imagen para guardar.", Response::HTTP_FORBIDDEN);
+            return response(\AurageoConstants::MULTIMEDIA_WITHOUT_IMAGE, Response::HTTP_FORBIDDEN);
         } catch (\Exception $e) {
-            $this->message = "Ocurrió un error al subir la imagen de la propiedad.";
+            $this->message = \AurageoConstants::MULTIMEDIA_UPLOAD_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }
