@@ -165,7 +165,6 @@ class PlacesRepository
         return $place;
     }
 
-
     /**
      * Obtiene un lugar por el id de tarjeta
      *
@@ -198,6 +197,17 @@ class PlacesRepository
     public function getByHashtagId($hashtag_id){
         return Places::join('hashtags', 'hashtag.place_id', 'places.id')
             ->where('hashtag.id', $hashtag_id)
+            ->get(['places.id',
+                'places.name',
+                'places.description',
+                'places.latitude',
+                'places.longitude',
+                'places.deleted',
+                DB::raw('concat("' . env('APP_URL') . '", places.avatar_url) as avatarUrl'),
+                'places.user_id as userId',
+                'places.visible',
+                'places.address'
+            ])
             ->first();
     }
 
