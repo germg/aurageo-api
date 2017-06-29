@@ -74,7 +74,8 @@ class CardsRepository
         return Cards::create([
             'place_id' => $data->placeId,
             'image_url' => isset($data->imageUrl) ? $data->imageUrl : null,
-            'description' => isset($data->description) ? $data->description : null
+            'description' => isset($data->description) ? $data->description : null,
+            'deleted' => $data->deleted
         ]);
     }
 

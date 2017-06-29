@@ -173,8 +173,19 @@ class PlacesRepository
      * @return mixed
      */
     public function getByCardId($card_id){
-        return Places::join('cards', 'cards.place_id', 'id')
-            ->where('card.id', $card_id)
+        return Places::join('cards', 'cards.place_id', 'places.id')
+            ->where('cards.id', $card_id)
+            ->get(['places.id',
+                'places.name',
+                'places.description',
+                'places.latitude',
+                'places.longitude',
+                'places.deleted',
+                DB::raw('concat("' . env('APP_URL') . '", places.avatar_url) as avatarUrl'),
+                'places.user_id as userId',
+                'places.visible',
+                'places.address'
+            ])
             ->first();
     }
 
@@ -185,7 +196,7 @@ class PlacesRepository
      * @return mixed
      */
     public function getByHashtagId($hashtag_id){
-        return Places::join('hashtags', 'hashtag.place_id', 'id')
+        return Places::join('hashtags', 'hashtag.place_id', 'places.id')
             ->where('hashtag.id', $hashtag_id)
             ->first();
     }
