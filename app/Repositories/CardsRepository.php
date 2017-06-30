@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 class CardsRepository
 {
     const MODEL = 'App\Models\Cards';
+    const UPLOADS_FOLDER = '/uploads';
 
     /**
      * Obtiene todas las tarjetas de un lugar
@@ -74,9 +75,15 @@ class CardsRepository
      */
     public function create($data)
     {
+        $image_url = "";
+
+        if(isset($data->imageUrl) && !empty($data->imageUrl)){
+            $image_url = substr($data->imageUrl, strpos($data->imageUrl, self::UPLOADS_FOLDER));
+        }
+
         return Cards::create([
             'place_id' => $data->placeId,
-            'image_url' => isset($data->imageUrl) ? $data->imageUrl : null,
+            'image_url' => !empty($image_url) ? $image_url : null,
             'description' => isset($data->description) ? $data->description : null,
             'deleted' => $data->deleted
         ]);
@@ -90,6 +97,12 @@ class CardsRepository
      */
     public function edit($data)
     {
+        $image_url = "";
+
+        if(isset($data->imageUrl) && !empty($data->imageUrl)){
+            $image_url = substr($data->imageUrl, strpos($data->imageUrl, self::UPLOADS_FOLDER));
+        }
+
         return Cards::where('id', '=', $data->id)
             ->update([
                 'place_id' => $data->placeId,
