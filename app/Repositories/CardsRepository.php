@@ -23,7 +23,8 @@ class CardsRepository
                 'id',
                 'place_id as placeId',
                 DB::raw('concat("' . env('APP_URL') .'", image_url) as imageUrl'),
-                'description'
+                'description',
+                'created_at as createdAt'
             ]);
     }
 
@@ -42,7 +43,8 @@ class CardsRepository
             ->get([
                 'id',
                 DB::raw('concat("' . env('APP_URL') .'", image_url) as imageUrl'),
-                'description'
+                'description',
+                'created_at as createdAt'
             ]);
     }
 
@@ -58,7 +60,8 @@ class CardsRepository
             ->get([
                 'id',
                 DB::raw('concat("' . env('APP_URL') .'", image_url) as imageUrl'),
-                'description'
+                'description',
+                'created_at as createdAt'
             ])
             ->first();
     }
