@@ -137,9 +137,9 @@ class PlacesController extends BaseController
             $data = (object)$data;
             $res = $this->placesRepository->create($data);
 
-            if(isset($data->hashtags)){
+            if (isset($data->hashtags)) {
                 $tag = null;
-                foreach($data->hashtags as $hashtag){
+                foreach ($data->hashtags as $hashtag) {
                     $tag = new Hashtags();
                     $tag->placeId = $res->id;
                     $tag->description = $hashtag["description"];
@@ -185,14 +185,14 @@ class PlacesController extends BaseController
 
             $res = $this->placesRepository->edit($data);
 
-            if(isset($data->hashtags)){
-                foreach($data->hashtags as $hashtag){
+            if (isset($data->hashtags)) {
+                foreach ($data->hashtags as $hashtag) {
                     $hashtag = (object)$hashtag;
-                    if(!$hashtag->id || ($hashtag->id && $hashtag->id === null)){
+                    if (!$hashtag->id || ($hashtag->id && $hashtag->id === null)) {
                         $this->hashtagsRepository->create($hashtag);
-                    }else if(empty($hashtag->description)){
+                    } else if (empty($hashtag->description)) {
                         $this->hashtagsRepository->delete($hashtag->id);
-                    }else{
+                    } else {
                         $this->hashtagsRepository->edit($hashtag);
                     }
                 }
@@ -228,6 +228,24 @@ class PlacesController extends BaseController
             return response(Response::HTTP_OK);
         } catch (\Exception $e) {
             $this->message = \AurageoConstants::PLACE_DELETE_ERROR;
+            Log::error($this->message . " Error: " . $e);
+            return response($this->message, Response::HTTP_FORBIDDEN);
+        }
+    }
+
+    /**
+     * Obtiene los lugares cercanos a la posición de latitud y longitud dadas.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function getNearPlaces(Request $request)
+    {
+        try {
+            $data = (object)$request->all();
+            return response($this->placesRepository->getPlacesNearToCoordinate($data->latitude, $data->longitude), Response::HTTP_OK);
+        } catch (\Exception $e) {
+            $this->message = \AurageoConstants::PLACE_GET_PLACES_NEAR_ERROR;
             Log::error($this->message . " Error: " . $e);
             return response($this->message, Response::HTTP_FORBIDDEN);
         }

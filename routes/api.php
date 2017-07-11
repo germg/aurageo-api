@@ -43,6 +43,7 @@ Route::group(['prefix' => 'places'], function () {
     Route::put('/create', 'Business\PlacesController@create')->middleware('jwt.auth');
     Route::post('/edit', 'Business\PlacesController@edit')->middleware('jwt.auth');
     Route::delete('/delete/{id}', 'Business\PlacesController@delete')->middleware('jwt.auth');
+    Route::post('/near', 'Business\PlacesController@getNearPlaces');
 });
 
 Route::group(['prefix' => 'multimedia'], function () {
